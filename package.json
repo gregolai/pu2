@@ -1,5 +1,4 @@
 {
-	"private": true,
 	"name": "pu2",
 	"version": "0.0.1",
 	"description": "A library written in TypeScript",
