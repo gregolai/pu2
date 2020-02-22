@@ -1,10 +1,10 @@
 /**
  * @type {Partial<jest.InitialOptions>}
  */
-const config = {
+module.exports = {
 	preset: 'ts-jest',
 	rootDir: '..',
-	testMatch: ['<rootDir>/src/**/__tests__/**/*.ts?(x)', '<rootDir>/src/**/?(*.)+(spec|test).ts?(x)'],
+	testMatch: ['<rootDir>/src/**/?(*.)+(spec|test).ts?(x)'],
 	testPathIgnorePatterns: ['dist'],
 	coverageThreshold: {
 		global: {
@@ -14,7 +14,8 @@ const config = {
 			statements: 80
 		}
 	},
+	globals: {
+		__DEV__: true
+	},
 	watchPlugins: ['jest-watch-typeahead/filename', 'jest-watch-typeahead/testname']
 };
-
-module.exports = config;

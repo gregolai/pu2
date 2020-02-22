@@ -1,7 +1,3 @@
-jest.mock('../environment.ts', () => ({
-	__DEV__: true
-}));
-
 import { Greeter } from '../greeter';
 
 describe(`Greeter`, () => {

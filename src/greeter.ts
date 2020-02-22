@@ -1,5 +1,3 @@
-import { __DEV__ } from './environment';
-
 export class Greeter {
 	constructor(private greeting: string) {}
 	greet(x: number[]) {
