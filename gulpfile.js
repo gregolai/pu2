@@ -66,3 +66,4 @@ const createPackageJSON = cb => {
 // }
 
 exports.build = series(cleanDist, parallel(buildESM, buildTypes), createPackageJSON);
+exports.clean = series(cleanDist);
