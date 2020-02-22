@@ -1,6 +1,6 @@
 {
 	"name": "pu2",
-	"version": "0.0.7",
+	"version": "0.0.8",
 	"description": "A library written in TypeScript",
 	"keywords": [],
 	"sideEffects": false,
@@ -23,7 +23,8 @@
 		"format": "prettier \"**/*.{ts,tsx,js,jsx,css,scss,sass,less}\"",
 		"lint:fix": "npm run lint -- --fix",
 		"lint": "tslint --project tsconfig.json --format codeFrame",
-		"postrelease": "node scripts/copy && node scripts/build && npm run release:github && npm run release:npm",
+		"__OLD:postrelease": "node scripts/copy && node scripts/build && npm run release:github && npm run release:npm",
+		"postrelease": "npm run release:github && npm run release:npm",
 		"prerelease": "npm run build",
 		"release:github": "git push --no-verify --follow-tags origin master",
 		"release:npm": "npm publish dist",
