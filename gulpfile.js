@@ -39,23 +39,30 @@ const buildTypes = cb => {
 };
 
 const createPackageJSON = cb => {
-	const package = JSON.parse(fs.readFileSync(ROOT_PACKAGE, { encoding: 'utf-8' }));
+	// Omit extraneous keys from package.json
+	const { devDependencies, husky, scripts, ...pkg } = JSON.parse(
+		fs.readFileSync(ROOT_PACKAGE, { encoding: 'utf-8' })
+	);
+	delete pkg['lint-staged'];
 
+	const DIST_MAIN = path.relative(DIST_DIR, DIST_ESM_INDEX);
 	const distPackage = {
-		name: package.name,
-		version: package.version,
-		description: package.description,
-		keywords: package.keywords,
-		module: path.relative(DIST_DIR, DIST_ESM_INDEX),
-		sideEffects: package.sideEffects,
-		repository: package.repository,
-		author: package.author,
-		license: package.license,
-		peerDependencies: package.peerDependencies,
-		dependencies: package.dependencies
+		...pkg,
+		main: DIST_MAIN,
+		module: DIST_MAIN
 	};
 
 	fs.writeFileSync(DIST_PACKAGE, jsonFormat(distPackage), { encoding: 'utf-8' });
+	cb();
+};
+
+const copyMetaFiles = cb => {
+	const copy = filename =>
+		fs.copyFileSync(path.resolve(ROOT_DIR, filename), path.resolve(DIST_DIR, filename));
+
+	copy('README.md');
+	copy('CHANGELOG.md');
+	copy('LICENSE');
 	cb();
 };
 
@@ -65,5 +72,5 @@ const createPackageJSON = cb => {
 // 	exec(`node ${FILESIZE_PATH} ./dist/bundles/index.umd.min.js ./dist/bundles/index.esm.min.js`, cb)
 // }
 
-exports.build = series(cleanDist, parallel(buildESM, buildTypes), createPackageJSON);
+exports.build = series(cleanDist, parallel(buildESM, buildTypes), createPackageJSON, copyMetaFiles);
 exports.clean = series(cleanDist);
