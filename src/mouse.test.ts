@@ -1,6 +1,6 @@
-import { startDrag } from '../mouse';
+import { startDrag } from './mouse';
 
-describe(`Mouse`, () => {
+describe('Mouse', () => {
 	const _sendMouseEvent = ({
 		target,
 		type,
@@ -22,8 +22,9 @@ describe(`Mouse`, () => {
 			})
 		);
 	};
-	const sendDragStart = (target, { clientX, clientY, ...rest }) => {
-		return new Promise(resolve => {
+
+	const sendDragStart = (target: HTMLElement, { clientX, clientY, ...rest }) => {
+		return new Promise<MouseEvent>(resolve => {
 			const listener = e => {
 				target.removeEventListener('mousedown', listener);
 				resolve(e);
