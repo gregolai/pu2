@@ -20,6 +20,7 @@ export const createPersist = <T>(namespace: string, defaultsMap: T) => {
 				if (!localStorage.hasOwnProperty(persistKey)) {
 					return defaultValue;
 				}
+
 				// Parse localStorage item. If null, JSON.parse will return null
 				return JSON.parse(localStorage.getItem(persistKey));
 			},
@@ -28,5 +29,6 @@ export const createPersist = <T>(namespace: string, defaultsMap: T) => {
 			}
 		};
 	}
+
 	return ret as PersistMap<T>;
 };

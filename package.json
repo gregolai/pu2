@@ -3,8 +3,6 @@
 	"version": "0.0.6",
 	"description": "A library written in TypeScript",
 	"keywords": [],
-	"module": "./dist/esm/index.js",
-	"typings": "./dist/esm/index.d.ts",
 	"sideEffects": false,
 	"repository": {
 		"type": "git",
