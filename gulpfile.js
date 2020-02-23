@@ -21,22 +21,26 @@ const cleanDist = cb => {
 	exec(`rm -rf ${DIST_DIR}`, cb);
 };
 
-const buildESM = cb => {
-	exec(
-		`NODE_ENV=esm babel src -d ${DIST_ESM_DIR} --extensions '.ts,.tsx,.js,.jsx' --source-maps inline`,
-		cb
-	);
+const buildTS = cb => {
+	exec('npx tsc', cb);
 };
 
-const buildTypes = cb => {
-	exec(
-		`npx tsc --jsx react --declaration true --declarationDir ${DIST_ESM_DIR} --emitDeclarationOnly true`,
-		(error, stdout, stderr) => {
-			console.log({ error, stdout, stderr });
-			cb(stdout);
-		}
-	);
-};
+// const buildESM = cb => {
+// 	exec(
+// 		`NODE_ENV=esm babel src -d ${DIST_ESM_DIR} --extensions '.ts,.tsx,.js,.jsx' --source-maps inline`,
+// 		cb
+// 	);
+// };
+
+// const buildTypes = cb => {
+// 	exec(
+// 		`npx tsc --jsx react --declaration true --declarationDir ${DIST_ESM_DIR} --emitDeclarationOnly true`,
+// 		(error, stdout, stderr) => {
+// 			console.log({ error, stdout, stderr });
+// 			cb(stdout);
+// 		}
+// 	);
+// };
 
 const createPackageJSON = cb => {
 	// Omit extraneous keys from package.json
@@ -72,5 +76,5 @@ const copyMetaFiles = cb => {
 // 	exec(`node ${FILESIZE_PATH} ./dist/bundles/index.umd.min.js ./dist/bundles/index.esm.min.js`, cb)
 // }
 
-exports.build = series(cleanDist, parallel(buildESM, buildTypes), createPackageJSON, copyMetaFiles);
+exports.build = series(cleanDist, buildTS, parallel(copyMetaFiles, createPackageJSON));
 exports.clean = series(cleanDist);

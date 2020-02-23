@@ -1,8 +1,14 @@
 {
 	"compilerOptions": {
+		"allowJs": true,
+		"declaration": true,
 		"esModuleInterop": true,
-		"jsx": "react"
+		"inlineSourceMap": true,
+		"jsx": "react",
+		"moduleResolution": "node",
+		"outDir": "dist/esm",
+		"target": "ES2019"
 	},
-	"exclude": ["./**/__tests__"],
-	"include": ["./src"]
+	"exclude": ["node_modules", "src/**/*.test.ts"],
+	"include": ["src"]
 }
