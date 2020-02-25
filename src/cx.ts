@@ -1,6 +1,6 @@
-type CxClassName = { [key: string]: any } | string;
+type CxClassName = { [key: string]: any } | string | CxClassName[];
 
-export const cx = (...args: (CxClassName | CxClassName[])[]) => {
+export const cx = (...args: CxClassName[]) => {
 	const classes: string[] = [];
 
 	for (let i = 0, ii = args.length; i < ii; ++i) {
