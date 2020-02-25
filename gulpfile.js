@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const { exec, execSync } = require('child_process');
-const { series, parallel } = require('gulp');
+const { task, series, parallel } = require('gulp');
 const prettier = require('prettier');
 
 const ROOT_DIR = path.resolve(__dirname);
@@ -22,7 +22,10 @@ const cleanDist = cb => {
 };
 
 const buildTS = cb => {
-	exec('npx tsc', cb);
+	exec('npx tsc', (error, stdout, stderr) => {
+		console.log(stdout);
+		cb();
+	});
 };
 
 // const buildESM = cb => {
@@ -76,5 +79,5 @@ const copyMetaFiles = cb => {
 // 	exec(`node ${FILESIZE_PATH} ./dist/bundles/index.umd.min.js ./dist/bundles/index.esm.min.js`, cb)
 // }
 
-exports.build = series(cleanDist, buildTS, parallel(copyMetaFiles, createPackageJSON));
-exports.clean = series(cleanDist);
+task('build', series(cleanDist, buildTS, parallel(copyMetaFiles, createPackageJSON)));
+task('clean', series(cleanDist));

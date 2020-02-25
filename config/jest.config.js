@@ -15,7 +15,8 @@ module.exports = {
 		}
 	},
 	globals: {
-		__DEV__: true
+		__DEV__: true,
+		__TEST__: true
 	},
 	watchPlugins: ['jest-watch-typeahead/filename', 'jest-watch-typeahead/testname']
 };
