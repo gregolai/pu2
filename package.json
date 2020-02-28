@@ -42,7 +42,7 @@
 	"husky": {
 		"hooks": {
 			"pre-commit": "lint-staged",
-			"pre-push": "npm run style && npm run test -- --bail --onlyChanged"
+			"pre-push": "npm run style:fix && npm run test -- --bail --onlyChanged"
 		}
 	},
 	"lint-staged": {

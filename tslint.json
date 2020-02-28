@@ -7,6 +7,14 @@
 		"tslint-config-prettier"
 	],
 	"rules": {
+		"file-name-casing": false,
+		"forin": false,
+		"no-bitwise": false,
+		"no-console": false,
+		"no-parameter-reassignment": false,
+		"no-unsafe-any": false,
+		"no-unused-declaration": false,
+
 		// types related rules
 		"no-inferrable-types": true,
 		"no-namespace": {
@@ -15,8 +23,6 @@
 		"interface-name": {
 			"options": "never-prefix"
 		},
-
-		"no-unsafe-any": true,
 
 		// core lint rules
 		"ban": {
@@ -31,9 +37,6 @@
 				}
 			]
 		},
-		"file-name-casing": {
-			"options": ["kebab-case"]
-		},
 
 		"match-default-export-name": true,
 		"newline-before-return": true,
@@ -42,7 +45,6 @@
 		"no-invalid-this": {
 			"options": "check-function-in-method"
 		},
-		"no-parameter-reassignment": true,
 		"no-require-imports": true,
 		"one-variable-per-declaration": false,
 		"ordered-imports": true,
@@ -58,7 +60,7 @@
 		// tslint:tslint-config-standard overrides
 		//
 		// tslint-etc rules
-		"no-unused-declaration": true,
+
 		"no-dtslint-typo": true,
 		"no-assign-mutated-array": true,
 		// tslint-react rules

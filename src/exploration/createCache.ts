@@ -9,6 +9,7 @@ export default <T>(maxCount: number) => {
 		lookup = {};
 	};
 	reset();
+
 	return {
 		get: (key: string) => lookup[key],
 		set: (key: string, value: T) => {
@@ -24,6 +25,7 @@ export default <T>(maxCount: number) => {
 				tail = next;
 			}
 			lookup[key] = value;
+
 			return value;
 		},
 		reset,

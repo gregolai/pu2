@@ -3,6 +3,7 @@ import createCache from './createCache';
 
 const getNextId = (() => {
 	let _id = 0;
+
 	return () => ++_id;
 })();
 
@@ -16,6 +17,7 @@ const getNextClassName = (() => {
 		x ^= x << 13;
 		x ^= x >> 17;
 		x ^= x << 5;
+
 		return (state = x);
 	};
 
@@ -62,6 +64,7 @@ const charHash = charCode => {
 	charCode ^= charCode << 13;
 	charCode ^= charCode >> 17;
 	charCode ^= charCode << 5;
+
 	return charCode;
 };
 
@@ -70,6 +73,7 @@ const hashString = (str: string) => {
 	for (let i = str.length - 1; i >= 0; --i) {
 		hash ^= charHash(str.charCodeAt(i));
 	}
+
 	return hash;
 };
 
@@ -103,6 +107,7 @@ const getOrSetProp = (propName: string, value: PropValue) => {
 	if (prop) return prop;
 
 	const str = `${kebabCase(propName)}:${value};`;
+
 	return propCache.set(cacheKey, {
 		hash: hashString(str),
 		str,
@@ -123,7 +128,7 @@ const createOrUpdateParsed = (obj: CSSObject, parsed?: CSSParsed, className?: st
 	let str = '';
 	let checksum = 0;
 
-	for (let key in obj) {
+	for (const key in obj) {
 		const value = obj[key];
 
 		switch (key[0]) {
@@ -132,7 +137,7 @@ const createOrUpdateParsed = (obj: CSSObject, parsed?: CSSParsed, className?: st
 			case ' ': // CHILD
 			case '>': // IMMEDIATE CHILD
 			case ':': // PSEUDO
-				let child = children[key];
+				const child = children[key];
 				if (child) {
 					delete unusedChildren[key];
 				}
@@ -173,6 +178,7 @@ const createOrUpdateParsed = (obj: CSSObject, parsed?: CSSParsed, className?: st
 		for (const selector in unusedChildren) {
 			delete children[selector];
 		}
+
 		return parsed;
 	}
 
