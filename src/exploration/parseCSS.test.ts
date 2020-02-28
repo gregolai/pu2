@@ -1,4 +1,4 @@
-import { createParsed, updateParsed } from './tmp';
+import { createParsed, updateParsed } from './parseCSS';
 
 describe('Styled_tmp', () => {
 	it('stuff', () => {

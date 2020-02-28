@@ -3,9 +3,9 @@
  */
 module.exports = {
 	preset: 'ts-jest',
-	rootDir: '..',
-	testMatch: ['<rootDir>/src/**/?(*.)+(spec|test).ts?(x)'],
-	testPathIgnorePatterns: ['dist'],
+	rootDir: '.',
+	testMatch: ['<rootDir>/src/**/*.test.(ts|tsx)'],
+	testPathIgnorePatterns: ['<rootDir>/dist'],
 	coverageThreshold: {
 		global: {
 			branches: 80,
