@@ -1,29 +1,15 @@
 import kebabCase from 'lodash/kebabCase';
 import createCache from './createCache';
+import shorthands from './shorthands';
 
 const getNextId = (() => {
 	let _id = 0;
-
 	return () => ++_id;
 })();
 
 const getNextClassName = (() => {
 	let state = 0;
-
-	/* The state word must be initialized to non-zero */
-	const xorshift32 = () => {
-		/* Algorithm "xor" from p. 4 of Marsaglia, "Xorshift RNGs" */
-		let x = state;
-		x ^= x << 13;
-		x ^= x >> 17;
-		x ^= x << 5;
-
-		return (state = x);
-	};
-
-	const basic = () => ++state;
-
-	return () => `g-${basic().toString(32)}`;
+	return () => `g-${(++state).toString(32)}`;
 })();
 
 const createPool = <T>(initSize: number, createFn: () => T) => {
@@ -47,24 +33,11 @@ const createPool = <T>(initSize: number, createFn: () => T) => {
 	};
 };
 
-// const styleElements = createPool(10, () => document.createElement('style'));
-
-const SHORTHANDS: { [k: string]: string[] } = {
-	m: ['margin'],
-	ml: ['marginLeft'],
-	mr: ['marginRight'],
-	mt: ['marginTop'],
-	mb: ['marginTop'],
-	mx: ['marginLeft', 'marginRight'],
-	my: ['marginTop', 'marginBottom'],
-	bg: ['background']
-};
-
-const charHash = charCode => {
+// xorshift 32-bit https://en.wikipedia.org/wiki/Xorshift
+const charHash = (charCode: number) => {
 	charCode ^= charCode << 13;
 	charCode ^= charCode >> 17;
 	charCode ^= charCode << 5;
-
 	return charCode;
 };
 
@@ -73,7 +46,6 @@ const hashString = (str: string) => {
 	for (let i = str.length - 1; i >= 0; --i) {
 		hash ^= charHash(str.charCodeAt(i));
 	}
-
 	return hash;
 };
 
@@ -116,20 +88,28 @@ const getOrSetProp = (propName: string, value: PropValue) => {
 	);
 };
 
-const createOrUpdateParsed = (obj: CSSObject, parsed?: CSSParsed, className?: string) => {
+const resolveShorthand = (propName: string, value: PropValue) => {
+	const sh = shorthands[propName];
+	return {
+		propNames: sh ? sh.propNames : [propName],
+		resolvedValue: sh && typeof value !== 'string' ? `${value}${sh.append}` : value
+	};
+};
+
+const createOrUpdateParsed = (css: CSSObject, parsed?: CSSParsed, className?: string) => {
 	if (!className) {
 		className = parsed ? parsed.className : getNextClassName();
 	}
-	const props = parsed ? parsed.props : {};
-	const children = parsed ? parsed.children : {};
+	const props = parsed ? { ...parsed.props } : {};
+	const children = parsed ? { ...parsed.children } : {};
 	const unusedProps = parsed ? { ...parsed.props } : null;
 	const unusedChildren = parsed ? { ...parsed.children } : null;
 
 	let str = '';
 	let checksum = 0;
 
-	for (const key in obj) {
-		const value = obj[key];
+	for (const key in css) {
+		const value = css[key];
 
 		// Null and undefined values should not get parsed
 		if (value === null || value === undefined) continue;
@@ -147,8 +127,7 @@ const createOrUpdateParsed = (obj: CSSObject, parsed?: CSSParsed, className?: st
 				children[key] = createOrUpdateParsed(value as CSSObject, child, `${className}${key}`);
 				break;
 			default:
-				// Check if "p" or "ml", etc
-				const propNames = SHORTHANDS[key] || [key];
+				const { propNames, resolvedValue } = resolveShorthand(key, value as PropValue);
 
 				for (let i = 0, ii = propNames.length; i < ii; ++i) {
 					const propName = propNames[i];
@@ -158,7 +137,7 @@ const createOrUpdateParsed = (obj: CSSObject, parsed?: CSSParsed, className?: st
 						delete unusedProps[propName];
 					}
 
-					prop = props[propName] = getOrSetProp(propName, value as PropValue);
+					prop = props[propName] = getOrSetProp(propName, resolvedValue);
 					checksum ^= prop.hash;
 					str += prop.str;
 				}
@@ -197,5 +176,5 @@ const createOrUpdateParsed = (obj: CSSObject, parsed?: CSSParsed, className?: st
 	};
 };
 
-export const createParsed = (obj: CSSObject) => createOrUpdateParsed(obj);
-export const updateParsed = (parsed: CSSParsed, obj: CSSObject) => createOrUpdateParsed(obj, parsed);
+export const createParsed = (css: CSSObject) => createOrUpdateParsed(css);
+export const updateParsed = (parsed: CSSParsed, css: CSSObject) => createOrUpdateParsed(css, parsed);
