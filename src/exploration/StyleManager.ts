@@ -20,7 +20,7 @@ export default class StyleManager {
 	// https://davidwalsh.name/add-rules-stylesheets
 	_addCSSRule = (sheet: ManagedStyleSheet, selector: string, rules: string, index: number) => {
 		if ('insertRule' in sheet) {
-			sheet.insertRule(selector + '{' + rules + '}', index);
+			sheet.insertRule(`${selector}{${rules}}`, index);
 		} else if ('addRule' in sheet) {
 			// @ts-ignore
 			sheet.addRule(selector, rules, index);
@@ -34,7 +34,7 @@ export default class StyleManager {
 			const rule = parsed.str;
 			this._addCSSRule(this._sheet, selector, rule, index++);
 
-			for (let key in parsed.children) {
+			for (const key in parsed.children) {
 				recurse(parsed.children[key]);
 			}
 		};

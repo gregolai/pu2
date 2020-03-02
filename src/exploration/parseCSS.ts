@@ -4,11 +4,13 @@ import shorthands from './shorthands';
 
 const getNextId = (() => {
 	let _id = 0;
+
 	return () => ++_id;
 })();
 
 const getNextClassName = (() => {
 	let state = 0;
+
 	return () => `g-${(++state).toString(32)}`;
 })();
 
@@ -38,6 +40,7 @@ const charHash = (charCode: number) => {
 	charCode ^= charCode << 13;
 	charCode ^= charCode >> 17;
 	charCode ^= charCode << 5;
+
 	return charCode;
 };
 
@@ -46,6 +49,7 @@ const hashString = (str: string) => {
 	for (let i = str.length - 1; i >= 0; --i) {
 		hash ^= charHash(str.charCodeAt(i));
 	}
+
 	return hash;
 };
 
@@ -77,6 +81,7 @@ const propCache = createCache<CSSParsedProp>(PROP_CACHE_MAX);
 const getOrSetProp = (propName: string, value: PropValue) => {
 	const cacheKey = `${propName}_${value}`;
 	const prop = propCache.get(cacheKey);
+
 	return (
 		prop ||
 		propCache.set(cacheKey, {
@@ -90,6 +95,7 @@ const getOrSetProp = (propName: string, value: PropValue) => {
 
 const resolveShorthand = (propName: string, value: PropValue) => {
 	const sh = shorthands[propName];
+
 	return {
 		propNames: sh ? sh.propNames : [propName],
 		resolvedValue: sh && typeof value !== 'string' ? `${value}${sh.append}` : value
