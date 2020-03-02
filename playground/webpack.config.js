@@ -13,6 +13,7 @@ module.exports = {
 	mode: 'development',
 	devtool: 'eval-cheap-module-source-map',
 	devServer: {
+		contentBase: paths.playgroundPublic,
 		port: 9001,
 		hot: true
 	},
@@ -22,8 +23,11 @@ module.exports = {
 
 	entry: paths.playgroundEntry,
 
-	// NO NEED FOR OUTPUT IF ONLY RUNNING DEVSERVER
-	// output: { },
+	output: {
+		filename: '[name].js',
+		path: paths.playgroundPublic,
+		chunkFilename: '[name].js'
+	},
 
 	module: {
 		rules: [
@@ -56,11 +60,11 @@ module.exports = {
 	resolve: {
 		alias: {
 			react: 'preact/compat',
-			'react-dom': 'preact/compat',
+			'react-dom': 'preact/compat'
 
-			'create-react-class': 'preact-compat/lib/create-react-class',
+			// 'create-react-class': 'preact-compat/lib/create-react-class',
 			// Not necessary unless you consume a module requiring `react-dom-factories`
-			'react-dom-factories': 'preact-compat/lib/react-dom-factories'
+			// 'react-dom-factories': 'preact-compat/lib/react-dom-factories'
 		},
 		extensions: ['.ts', '.tsx', '.js', '.jsx'],
 		modules: [paths.src, 'node_modules']

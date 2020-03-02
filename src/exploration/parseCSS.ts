@@ -90,7 +90,7 @@ interface CSSParsedProp {
 
 type PropValue = string | number;
 
-interface CSSParsed {
+export interface CSSParsed {
 	id: number;
 	children: Mapped<CSSParsed>;
 	className: string;
@@ -99,21 +99,21 @@ interface CSSParsed {
 	props: Mapped<CSSParsedProp>;
 }
 
-const propCache = createCache<CSSParsedProp>(Number.MAX_SAFE_INTEGER);
+const PROP_CACHE_MAX = 2048;
+const propCache = createCache<CSSParsedProp>(PROP_CACHE_MAX);
 
 const getOrSetProp = (propName: string, value: PropValue) => {
 	const cacheKey = `${propName}_${value}`;
 	const prop = propCache.get(cacheKey);
-	if (prop) return prop;
-
-	const str = `${kebabCase(propName)}:${value};`;
-
-	return propCache.set(cacheKey, {
-		hash: hashString(str),
-		str,
-		propName,
-		value
-	});
+	return (
+		prop ||
+		propCache.set(cacheKey, {
+			hash: hashString(cacheKey),
+			str: `${kebabCase(propName)}:${value};`,
+			propName,
+			value
+		})
+	);
 };
 
 const createOrUpdateParsed = (obj: CSSObject, parsed?: CSSParsed, className?: string) => {
@@ -130,6 +130,9 @@ const createOrUpdateParsed = (obj: CSSObject, parsed?: CSSParsed, className?: st
 
 	for (const key in obj) {
 		const value = obj[key];
+
+		// Null and undefined values should not get parsed
+		if (value === null || value === undefined) continue;
 
 		switch (key[0]) {
 			case '.': // HAS CLASS
@@ -172,6 +175,8 @@ const createOrUpdateParsed = (obj: CSSObject, parsed?: CSSParsed, className?: st
 			parsed.checksum = checksum;
 			parsed.str = str;
 		} else if (__DEV__) {
+			// If checksums are equal, then [arsed string
+			// should equal updated string
 			console.assert(parsed.str === str);
 		}
 

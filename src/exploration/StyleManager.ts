@@ -1,17 +1,20 @@
+import { CSSParsed } from './parseCSS';
+
 interface ManagedStyleSheet extends StyleSheet {
 	addRule: (selector: string, rules: string, index: number) => void;
 	insertRule: (selectorWithRules: string, index: number) => void;
 }
 
-class StyleManager {
+export default class StyleManager {
+	_styleElement: HTMLStyleElement;
 	_sheet: ManagedStyleSheet;
 
 	constructor() {
-		const el = document.createElement('style');
+		this._styleElement = document.createElement('style');
 
-		document.head.appendChild(el);
+		document.head.appendChild(this._styleElement);
 
-		this._sheet = el.sheet as ManagedStyleSheet;
+		this._sheet = this._styleElement.sheet as ManagedStyleSheet;
 	}
 
 	// https://davidwalsh.name/add-rules-stylesheets
@@ -24,7 +27,17 @@ class StyleManager {
 		}
 	};
 
-	addRule() {
-		// TODO
+	addParsedObj(parsedObj: CSSParsed) {
+		let index = 0;
+		const recurse = (parsed: CSSParsed) => {
+			const selector = `.${parsed.className}`;
+			const rule = parsed.str;
+			this._addCSSRule(this._sheet, selector, rule, index++);
+
+			for (let key in parsed.children) {
+				recurse(parsed.children[key]);
+			}
+		};
+		recurse(parsedObj);
 	}
 }
