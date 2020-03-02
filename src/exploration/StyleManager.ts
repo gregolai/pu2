@@ -14,6 +14,16 @@ class StyleManager {
 		this._sheet = el.sheet as ManagedStyleSheet;
 	}
 
+	// https://davidwalsh.name/add-rules-stylesheets
+	_addCSSRule = (sheet: ManagedStyleSheet, selector: string, rules: string, index: number) => {
+		if ('insertRule' in sheet) {
+			sheet.insertRule(selector + '{' + rules + '}', index);
+		} else if ('addRule' in sheet) {
+			// @ts-ignore
+			sheet.addRule(selector, rules, index);
+		}
+	};
+
 	addRule() {
 		// TODO
 	}

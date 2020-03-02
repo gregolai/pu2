@@ -14,7 +14,7 @@ const { log, paths } = require('./utils');
 const buildEsm = async () => {
 	log('BUILD:ESM');
 	try {
-		execSync(`npx tsc -p ${paths.buildTsConfigEsm}`);
+		execSync(`npx tsc -p ${paths.tsconfigEsm}`);
 	} catch (e) {
 		throw new Error(e.stdout.toString());
 	}

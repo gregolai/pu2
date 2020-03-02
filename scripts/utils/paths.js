@@ -4,7 +4,7 @@ const path = require('path');
 const root = path.resolve(__dirname, '../..');
 const rootPackage = path.resolve(root, 'package.json');
 
-const buildTsConfigEsm = path.resolve(root, 'tsconfig.json');
+const tsconfigEsm = path.resolve(root, 'tsconfig.json');
 
 const dist = path.resolve(root, 'dist');
 const distPackage = path.resolve(dist, 'package.json');
@@ -18,11 +18,16 @@ const distEsmIndex = path.resolve(distEsm, 'index.js');
 const src = path.resolve(root, 'src');
 const srcIndex = path.resolve(src, 'index.ts');
 
+const playground = path.resolve(root, 'playground');
+const playgroundEntry = path.resolve(playground, 'entry.js');
+const playgroundIndex = path.resolve(playground, 'index.ejs');
+const playgroundPublic = path.resolve(playground, 'public');
+
 module.exports = {
 	root,
 	rootPackage,
 
-	buildTsConfigEsm,
+	tsconfigEsm,
 
 	dist,
 	distPackage,
@@ -32,5 +37,10 @@ module.exports = {
 	distEsmIndex,
 
 	src,
-	srcIndex
+	srcIndex,
+
+	playground,
+	playgroundEntry,
+	playgroundIndex,
+	playgroundPublic
 };
