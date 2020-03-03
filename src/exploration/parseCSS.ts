@@ -75,17 +75,17 @@ export interface CSSParsed {
 	props: Mapped<CSSParsedProp>;
 }
 
-const PROP_CACHE_MAX = 2048;
-const propCache = createCache<CSSParsedProp>(PROP_CACHE_MAX);
+const propCache = createCache<CSSParsedProp>(Number.MAX_SAFE_INTEGER);
+const parsedObjCache = createCache<CSSParsed>(Number.MAX_SAFE_INTEGER);
 
 const getOrSetProp = (propName: string, value: PropValue) => {
-	const cacheKey = `${propName}_${value}`;
-	const prop = propCache.get(cacheKey);
+	const key = `${propName}_${value}`;
+	const prop = propCache.get(key);
 
 	return (
 		prop ||
-		propCache.set(cacheKey, {
-			hash: hashString(cacheKey),
+		propCache.set(key, {
+			hash: hashString(key),
 			str: `${kebabCase(propName)}:${value};`,
 			propName,
 			value
@@ -106,6 +106,7 @@ const createOrUpdateParsed = (css: CSSObject, parsed?: CSSParsed, className?: st
 	if (!className) {
 		className = parsed ? parsed.className : getNextClassName();
 	}
+	// TODO: Props and children copy cause tests to fail because parsed value is intended to be mutated
 	const props = parsed ? { ...parsed.props } : {};
 	const children = parsed ? { ...parsed.children } : {};
 	const unusedProps = parsed ? { ...parsed.props } : null;

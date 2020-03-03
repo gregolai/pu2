@@ -14,13 +14,13 @@ describe('Styled_tmp', () => {
 			children: {
 				':hover': {
 					id: 1,
-					checksum: 15427384,
+					checksum: 28118446,
 					children: {},
 					className: 'g-1:hover',
 					str: 'font-size:32;',
 					props: {
 						fontSize: {
-							hash: 15427384,
+							hash: 28118446,
 							propName: 'fontSize',
 							value: 32,
 							str: 'font-size:32;'
@@ -32,13 +32,13 @@ describe('Styled_tmp', () => {
 			str: 'font-size:16;',
 			props: {
 				fontSize: {
-					hash: 15968254,
+					hash: 28691816,
 					propName: 'fontSize',
 					value: 16,
 					str: 'font-size:16;'
 				}
 			},
-			checksum: 15968254
+			checksum: 28691816
 		};
 		//expected.children[':hover'] = expected.children[0];
 		//expected.children[0] = expected.children[':hover'];
@@ -57,19 +57,19 @@ describe('Styled_tmp', () => {
 
 		expected = {
 			...expected,
-			checksum: 6759192,
+			checksum: 5407413,
 			children: {
 				':hover': {
 					...expected.children[':hover'],
 
-					checksum: 25447652,
+					checksum: 16222175,
 					// id,
 					// className: 'g-1:hover',
 					str: 'color:blue;',
 					props: {
 						// @ts-ignore
 						color: {
-							hash: 25447652,
+							hash: 16222175,
 							propName: 'color',
 							value: 'blue',
 							str: 'color:blue;'
@@ -81,14 +81,14 @@ describe('Styled_tmp', () => {
 			// id
 			props: {
 				fontSize: {
-					hash: 540738,
+					hash: 21899988,
 					propName: 'fontSize',
 					str: 'font-size:8;',
 					value: 8
 				},
 				// @ts-ignore
 				color: {
-					hash: 7299930,
+					hash: 18655329,
 					propName: 'color',
 					value: 'white',
 					str: 'color:white;'
@@ -128,14 +128,14 @@ describe('Styled_tmp', () => {
 				// @ts-ignore
 				' h1': {
 					id: 3,
-					checksum: 28691816,
+					checksum: 12977747,
 					children: {},
 					className: 'g-1 h1',
 					str: 'color:salmon;',
 					props: {
 						// @ts-ignore
 						color: {
-							hash: 28691816,
+							hash: 12977747,
 							propName: 'color',
 							value: 'salmon',
 							str: 'color:salmon;'
@@ -146,7 +146,7 @@ describe('Styled_tmp', () => {
 			props: {
 				// @ts-ignore
 				color: {
-					hash: 25447652,
+					hash: 16222175,
 					propName: 'color',
 					value: 'blue',
 					str: 'color:blue;'
@@ -155,7 +155,7 @@ describe('Styled_tmp', () => {
 			id: 2,
 			className: 'g-1',
 			str: 'color:blue;',
-			checksum: 25447652
+			checksum: 16222175
 		};
 
 		expect(parsed).toEqual(expected);
