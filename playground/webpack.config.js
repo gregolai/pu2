@@ -13,9 +13,8 @@ module.exports = {
 	mode: 'development',
 	devtool: 'eval-cheap-module-source-map',
 	devServer: {
-		contentBase: paths.playgroundPublic,
-		port: 9001,
-		hot: true
+		//contentBase: paths.playgroundPublic,
+		port: 9001
 	},
 	node: {
 		fs: 'empty'
@@ -53,8 +52,9 @@ module.exports = {
 		}),
 		new webpack.DefinePlugin({
 			__DEV__: true
-		}),
-		new webpack.HotModuleReplacementPlugin()
+		})
+		// https://webpack.js.org/configuration/dev-server/#devserverhot
+		//new webpack.HotModuleReplacementPlugin()
 	],
 
 	resolve: {

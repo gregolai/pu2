@@ -2,12 +2,6 @@ import kebabCase from 'lodash/kebabCase';
 import createCache from './createCache';
 import shorthands from './shorthands';
 
-const getNextId = (() => {
-	let _id = 0;
-
-	return () => ++_id;
-})();
-
 const getNextClassName = (() => {
 	let state = 0;
 
@@ -67,7 +61,6 @@ interface CSSParsedProp {
 type PropValue = string | number;
 
 export interface CSSParsed {
-	id: number;
 	children: Mapped<CSSParsed>;
 	className: string;
 	str: string;
@@ -174,7 +167,6 @@ const createOrUpdateParsed = (css: CSSObject, parsed?: CSSParsed, className?: st
 	}
 
 	return {
-		id: getNextId(),
 		children,
 		className,
 		str,

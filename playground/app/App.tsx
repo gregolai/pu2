@@ -1,9 +1,8 @@
 import { h, Component, Fragment } from 'preact';
-import { Greeter } from '../../src/greeter';
+import { Greeter } from 'greeter';
 
-import { createParsed, updateParsed } from '../../src/exploration/parseCSS';
-import StyleManager from '../../src/exploration/StyleManager';
-import { create } from 'domain';
+import { createParsed, updateParsed } from 'exploration/parseCSS';
+import StyleManager from 'exploration/StyleManager';
 
 class StyledPrimitive extends Component {
 	static defaultProps = {
@@ -49,6 +48,7 @@ export default class App extends Component {
 					// @ts-ignore
 					css={{
 						m: toggled ? 20 : 30,
+						fontWeight: toggled ? 'bold' : undefined,
 						color: toggled ? 'salmon' : 'blue',
 						backgroundColor: toggled ? 'blue' : 'yellow',
 						':hover': {
@@ -58,7 +58,7 @@ export default class App extends Component {
 						}
 					}}
 				>
-					YYY
+					{this.props.children}
 				</StyledPrimitive>
 			</Fragment>
 		);

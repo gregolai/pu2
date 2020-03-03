@@ -10,10 +10,8 @@ describe('Styled_tmp', () => {
 		});
 
 		let expected = {
-			id: 2,
 			children: {
 				':hover': {
-					id: 1,
 					checksum: 28118446,
 					children: {},
 					className: 'g-1:hover',
@@ -63,7 +61,6 @@ describe('Styled_tmp', () => {
 					...expected.children[':hover'],
 
 					checksum: 16222175,
-					// id,
 					// className: 'g-1:hover',
 					str: 'color:blue;',
 					props: {
@@ -78,7 +75,6 @@ describe('Styled_tmp', () => {
 				}
 			},
 			// className
-			// id
 			props: {
 				fontSize: {
 					hash: 21899988,
@@ -127,7 +123,6 @@ describe('Styled_tmp', () => {
 			children: {
 				// @ts-ignore
 				' h1': {
-					id: 3,
 					checksum: 12977747,
 					children: {},
 					className: 'g-1 h1',
@@ -152,7 +147,6 @@ describe('Styled_tmp', () => {
 					str: 'color:blue;'
 				}
 			},
-			id: 2,
 			className: 'g-1',
 			str: 'color:blue;',
 			checksum: 16222175
