@@ -55,7 +55,7 @@ export default class StyleManager {
 
 		this._indexToChecksum[index] = checksum;
 
-		for (let key in children) {
+		for (const key in children) {
 			this.addOrUpdateObj(children[key]);
 		}
 	}

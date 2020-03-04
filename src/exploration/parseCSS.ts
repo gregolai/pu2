@@ -7,6 +7,7 @@ const charHash = (charCode: number) => {
 	charCode ^= charCode << 13;
 	charCode ^= charCode >> 17;
 	charCode ^= charCode << 5;
+
 	return charCode;
 };
 
@@ -15,6 +16,7 @@ const hashString = (str: string) => {
 	for (let i = str.length - 1; i >= 0; --i) {
 		hash ^= charHash(str.charCodeAt(i));
 	}
+
 	return hash;
 };
 
@@ -113,6 +115,7 @@ const recurse = (css: CSSObject, acc?: Acc, selector?: string) => {
 
 const getNextClassName = (() => {
 	let state = 0;
+
 	return () => `g-${(++state).toString(32)}`;
 })();
 
@@ -131,5 +134,6 @@ export const createParsed = (css: CSSObject, prevParsed: CSSParsedObj) => {
 		obj = nextParsed;
 		objCache.set(key, obj);
 	}
+
 	return obj;
 };
