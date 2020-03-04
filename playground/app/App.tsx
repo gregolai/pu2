@@ -1,8 +1,11 @@
 import { h, Component, Fragment } from 'preact';
 import { Greeter } from 'greeter';
 
-import { createParsed, updateParsed } from 'exploration/parseCSS';
+import { createParsed } from 'exploration/parseCSS';
+//import { createParsed, updateParsed } from 'exploration/parseCSS_types';
 import StyleManager from 'exploration/StyleManager';
+
+const manager = new StyleManager('g');
 
 class StyledPrimitive extends Component {
 	static defaultProps = {
@@ -12,13 +15,22 @@ class StyledPrimitive extends Component {
 		// const parsedObj = prevState.parsedObj
 		// 	? updateParsed(prevState.parsedObj, nextProps.css)
 		// 	: createParsed(nextProps.css);
-		const parsedObj = createParsed(nextProps.css);
-		prevState.manager.addParsedObj(parsedObj);
+		const parsedObj = createParsed(nextProps.css, prevState.parsedObj);
+
+		const getRulesStr = rules => rules.reduce((str, r) => str + r.str, '');
+
+		const recurse = obj => {
+			manager.addOrUpdateObj(obj);
+			for (let key in obj.children) {
+				recurse(obj.children[key]);
+			}
+		};
+		recurse(parsedObj);
+
 		return { parsedObj };
 	}
 
 	state = {
-		manager: new StyleManager(),
 		parsedObj: null
 	};
 
@@ -27,11 +39,37 @@ class StyledPrimitive extends Component {
 		const { as: Component } = this.props;
 		const { parsedObj } = this.state;
 
-		const className = parsedObj ? parsedObj.className : undefined;
+		const className = parsedObj ? parsedObj.selector : undefined;
+
 		// @ts-ignore
 		return <Component className={className}>{this.props.children}</Component>;
 	}
 }
+
+const MyThing = ({ children, css = {}, toggled }) => {
+	return (
+		<StyledPrimitive
+			// @ts-ignore
+			css={{
+				m: toggled ? 20 : 30,
+				fontWeight: toggled ? 'bold' : undefined,
+				color: toggled ? 'salmon' : 'blue',
+				backgroundColor: toggled ? 'blue' : 'red',
+				':hover': {
+					cursor: toggled ? 'pointer' : undefined,
+					color: toggled ? 'white' : 'yellow',
+					backgroundColor: toggled ? 'purple' : 'green'
+				},
+				':focus': {
+					border: '1px solid black'
+				},
+				...css
+			}}
+		>
+			{children}
+		</StyledPrimitive>
+	);
+};
 
 export default class App extends Component {
 	state = {
@@ -40,26 +78,25 @@ export default class App extends Component {
 	};
 	toggle = () => this.setState({ toggled: !this.state.toggled });
 	render() {
+		const { children } = this.props;
 		const { toggled } = this.state;
 		return (
 			<Fragment>
 				<button onClick={this.toggle}>TOGGLE CSS</button>
-				<StyledPrimitive
-					// @ts-ignore
-					css={{
-						m: toggled ? 20 : 30,
-						fontWeight: toggled ? 'bold' : undefined,
-						color: toggled ? 'salmon' : 'blue',
-						backgroundColor: toggled ? 'blue' : 'yellow',
-						':hover': {
-							cursor: toggled ? 'pointer' : undefined,
-							color: toggled ? 'white' : 'yellow',
-							backgroundColor: toggled ? 'purple' : 'red'
-						}
-					}}
-				>
-					{this.props.children}
-				</StyledPrimitive>
+				<MyThing toggled={toggled}>{children}</MyThing>
+				<MyThing toggled={toggled}>{children}</MyThing>
+				<MyThing toggled={toggled}>{children}</MyThing>
+				{toggled && (
+					<MyThing
+						css={{
+							padding: '10px',
+							outline: '1px solid black'
+						}}
+						toggled={true}
+					>
+						OTHER
+					</MyThing>
+				)}
 			</Fragment>
 		);
 	}

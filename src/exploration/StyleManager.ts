@@ -1,15 +1,28 @@
+import createCache, { Cache } from './createCache';
 import { CSSParsed } from './parseCSS';
 
 interface ManagedStyleSheet extends StyleSheet {
 	addRule: (selector: string, rules: string, index: number) => void;
 	insertRule: (selectorWithRules: string, index: number) => void;
+
+	deleteRule: (index: number) => void;
 }
 
+const getRulesStr = rules => rules.reduce((str, r) => str + r.str, '');
+
 export default class StyleManager {
+	_nextIndex: number;
+	_classPrefix: string;
+	_selectorToIndex: Mapped<number>;
+	_indexToChecksum: Mapped<number>;
 	_styleElement: HTMLStyleElement;
 	_sheet: ManagedStyleSheet;
 
-	constructor() {
+	constructor(classPrefix: string) {
+		this._nextIndex = 0;
+		this._classPrefix = classPrefix;
+		this._selectorToIndex = {};
+		this._indexToChecksum = {};
 		this._styleElement = document.createElement('style');
 
 		document.head.appendChild(this._styleElement);
@@ -18,26 +31,37 @@ export default class StyleManager {
 	}
 
 	// https://davidwalsh.name/add-rules-stylesheets
-	_addCSSRule = (sheet: ManagedStyleSheet, selector: string, rules: string, index: number) => {
-		if ('insertRule' in sheet) {
-			sheet.insertRule(`${selector}{${rules}}`, index);
-		} else if ('addRule' in sheet) {
-			// @ts-ignore
-			sheet.addRule(selector, rules, index);
-		}
+	_addCSSRule = (selector: string, rules: string, index: number) => {
+		this._sheet.insertRule(`${selector}{${rules}}`, index);
 	};
 
-	addParsedObj(parsedObj: CSSParsed) {
-		let index = 0;
-		const recurse = (parsed: CSSParsed) => {
-			const selector = `.${parsed.className}`;
-			const rule = parsed.str;
-			this._addCSSRule(this._sheet, selector, rule, index++);
+	addOrUpdateObj(obj: CSSParsed) {
+		const selector = `.${obj.selector}`;
+		const rulesStr = getRulesStr(obj.rules);
 
-			for (const key in parsed.children) {
-				recurse(parsed.children[key]);
+		let index = this._selectorToIndex[selector];
+		if (index === undefined) {
+			index = this._nextIndex++;
+			this._selectorToIndex[selector] = index;
+			this._indexToChecksum[index] = obj.checksum;
+		} else {
+			if (this._indexToChecksum[index] === obj.checksum) {
+				return;
 			}
-		};
-		recurse(parsedObj);
+			this._indexToChecksum[index] = obj.checksum;
+			this._sheet.deleteRule(index);
+		}
+		this._sheet.insertRule(`${selector}{${rulesStr}}`, index);
+	}
+
+	addOrUpdateSelector(selector: string, rulesStr: string) {
+		let index = this._selectorToIndex[selector];
+		if (index === undefined) {
+			index = this._nextIndex++;
+			this._selectorToIndex[selector] = index;
+		} else {
+			this._sheet.deleteRule(index);
+		}
+		this._sheet.insertRule(`${selector}{${rulesStr}}`, index);
 	}
 }

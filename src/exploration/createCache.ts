@@ -1,6 +1,11 @@
 type Entry = [string, Entry | null];
 
-export default <T>(maxCount: number) => {
+export interface Cache<T> {
+	get: (key: string) => T;
+	set: (key: string, value: T) => void;
+}
+
+export default <T>(maxCount: number = Number.MAX_SAFE_INTEGER) => {
 	let head: Entry, tail: Entry, count: number, lookup: Mapped<T>;
 	const reset = () => {
 		head = null;
@@ -32,5 +37,5 @@ export default <T>(maxCount: number) => {
 		__DEBUG__: () => ({
 			lookup
 		})
-	};
+	} as Cache<T>;
 };
