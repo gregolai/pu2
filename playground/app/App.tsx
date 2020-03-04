@@ -38,7 +38,9 @@ const MyThing = ({ children, css = {}, toggled }) => {
 		<StyledPrimitive
 			// @ts-ignore
 			css={{
-				m: toggled ? 20 : 30,
+				m: 10,
+				width: '100px',
+				display: 'inline-block',
 				fontWeight: toggled ? 'bold' : undefined,
 				color: toggled ? 'salmon' : 'blue',
 				backgroundColor: toggled ? 'blue' : 'red',
@@ -67,12 +69,23 @@ export default class App extends Component {
 	render() {
 		const { children } = this.props;
 		const { toggled } = this.state;
+
 		return (
 			<Fragment>
-				<button onClick={this.toggle}>TOGGLE CSS</button>
-				<MyThing toggled={toggled}>{children}</MyThing>
-				<MyThing toggled={toggled}>{children}</MyThing>
-				<MyThing toggled={toggled}>{children}</MyThing>
+				<button style={{ display: 'block' }} onClick={this.toggle}>
+					TOGGLE CSS
+				</button>
+				{Array.from(Array(1000)).map((_, i) => (
+					<MyThing
+						key={i}
+						toggled={toggled}
+						css={{
+							outline: `${Math.round(Math.random() * 10 + 1)}px solid black`
+						}}
+					>
+						{children}
+					</MyThing>
+				))}
 				{toggled && (
 					<MyThing
 						css={{
