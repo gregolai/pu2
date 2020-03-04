@@ -12,20 +12,9 @@ class StyledPrimitive extends Component {
 		as: 'div'
 	};
 	static getDerivedStateFromProps(nextProps, prevState) {
-		// const parsedObj = prevState.parsedObj
-		// 	? updateParsed(prevState.parsedObj, nextProps.css)
-		// 	: createParsed(nextProps.css);
 		const parsedObj = createParsed(nextProps.css, prevState.parsedObj);
 
-		const getRulesStr = rules => rules.reduce((str, r) => str + r.str, '');
-
-		const recurse = obj => {
-			manager.addOrUpdateObj(obj);
-			for (let key in obj.children) {
-				recurse(obj.children[key]);
-			}
-		};
-		recurse(parsedObj);
+		manager.addOrUpdateObj(parsedObj);
 
 		return { parsedObj };
 	}
@@ -39,10 +28,8 @@ class StyledPrimitive extends Component {
 		const { as: Component } = this.props;
 		const { parsedObj } = this.state;
 
-		const className = parsedObj ? parsedObj.selector : undefined;
-
 		// @ts-ignore
-		return <Component className={className}>{this.props.children}</Component>;
+		return <Component className={parsedObj?.className}>{this.props.children}</Component>;
 	}
 }
 

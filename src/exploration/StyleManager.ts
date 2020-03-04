@@ -1,5 +1,5 @@
 import createCache, { Cache } from './createCache';
-import { CSSParsed } from './parseCSS';
+import { CSSParsedObj } from './parseCSS';
 
 interface ManagedStyleSheet extends StyleSheet {
 	addRule: (selector: string, rules: string, index: number) => void;
@@ -15,7 +15,6 @@ export default class StyleManager {
 	_classPrefix: string;
 	_selectorToIndex: Mapped<number>;
 	_indexToChecksum: Mapped<number>;
-	_styleElement: HTMLStyleElement;
 	_sheet: ManagedStyleSheet;
 
 	constructor(classPrefix: string) {
@@ -23,11 +22,10 @@ export default class StyleManager {
 		this._classPrefix = classPrefix;
 		this._selectorToIndex = {};
 		this._indexToChecksum = {};
-		this._styleElement = document.createElement('style');
 
-		document.head.appendChild(this._styleElement);
-
-		this._sheet = this._styleElement.sheet as ManagedStyleSheet;
+		const s = document.createElement('style');
+		document.head.appendChild(s);
+		this._sheet = s.sheet as ManagedStyleSheet;
 	}
 
 	// https://davidwalsh.name/add-rules-stylesheets
@@ -35,23 +33,31 @@ export default class StyleManager {
 		this._sheet.insertRule(`${selector}{${rules}}`, index);
 	};
 
-	addOrUpdateObj(obj: CSSParsed) {
-		const selector = `.${obj.selector}`;
-		const rulesStr = getRulesStr(obj.rules);
+	addOrUpdateObj(obj: CSSParsedObj) {
+		const { checksum, children, className, rules } = obj;
+
+		const selector = `.${className}`;
+		const rulesStr = getRulesStr(rules);
 
 		let index = this._selectorToIndex[selector];
 		if (index === undefined) {
 			index = this._nextIndex++;
 			this._selectorToIndex[selector] = index;
-			this._indexToChecksum[index] = obj.checksum;
 		} else {
-			if (this._indexToChecksum[index] === obj.checksum) {
+			if (this._indexToChecksum[index] === checksum) {
 				return;
 			}
-			this._indexToChecksum[index] = obj.checksum;
+			// Delete rule so it can be immediately updated
 			this._sheet.deleteRule(index);
 		}
+
 		this._sheet.insertRule(`${selector}{${rulesStr}}`, index);
+
+		this._indexToChecksum[index] = checksum;
+
+		for (let key in children) {
+			this.addOrUpdateObj(children[key]);
+		}
 	}
 
 	addOrUpdateSelector(selector: string, rulesStr: string) {

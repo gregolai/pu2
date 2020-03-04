@@ -1,64 +1,64 @@
 interface Shorthand {
-	propNames: string[];
+	ruleNames: string[];
 	append: string;
 }
 
 const PX = 'px';
 
 const m = {
-	propNames: ['margin'],
+	ruleNames: ['margin'],
 	append: PX
 };
 const mt = {
-	propNames: ['marginTop'],
+	ruleNames: ['marginTop'],
 	append: PX
 };
 const mr = {
-	propNames: ['marginRight'],
+	ruleNames: ['marginRight'],
 	append: PX
 };
 const mb = {
-	propNames: ['marginBottom'],
+	ruleNames: ['marginBottom'],
 	append: PX
 };
 const ml = {
-	propNames: ['marginLeft'],
+	ruleNames: ['marginLeft'],
 	append: PX
 };
 const my = {
-	propNames: ['marginTop', 'marginBottom'],
+	ruleNames: ['marginTop', 'marginBottom'],
 	append: PX
 };
 const mx = {
-	propNames: ['marginLeft', 'marginRight'],
+	ruleNames: ['marginLeft', 'marginRight'],
 	append: PX
 };
 const p = {
-	propNames: ['padding'],
+	ruleNames: ['padding'],
 	append: PX
 };
 const pt = {
-	propNames: ['paddingTop'],
+	ruleNames: ['paddingTop'],
 	append: PX
 };
 const pr = {
-	propNames: ['paddingRight'],
+	ruleNames: ['paddingRight'],
 	append: PX
 };
 const pb = {
-	propNames: ['paddingBottom'],
+	ruleNames: ['paddingBottom'],
 	append: PX
 };
 const pl = {
-	propNames: ['paddingLeft'],
+	ruleNames: ['paddingLeft'],
 	append: PX
 };
 const py = {
-	propNames: ['paddingTop', 'paddingBottom'],
+	ruleNames: ['paddingTop', 'paddingBottom'],
 	append: PX
 };
 const px = {
-	propNames: ['paddingLeft', 'paddingRight'],
+	ruleNames: ['paddingLeft', 'paddingRight'],
 	append: PX
 };
 

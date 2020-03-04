@@ -7,7 +7,6 @@ const charHash = (charCode: number) => {
 	charCode ^= charCode << 13;
 	charCode ^= charCode >> 17;
 	charCode ^= charCode << 5;
-
 	return charCode;
 };
 
@@ -16,7 +15,6 @@ const hashString = (str: string) => {
 	for (let i = str.length - 1; i >= 0; --i) {
 		hash ^= charHash(str.charCodeAt(i));
 	}
-
 	return hash;
 };
 
@@ -24,54 +22,58 @@ interface CSSObject {
 	[key: string]: string | number | CSSObject;
 }
 
-interface CSSParsedProp {
+interface CSSParsedRule {
 	hash: number;
-	propName: string;
-	value: PropValue;
 	str: string;
+	name: string;
+	value: RuleValue;
 }
 
-type PropValue = string | number;
+type RuleValue = string | number;
 
-export interface CSSParsed {
+export interface CSSParsedObj {
 	checksum: number;
-	children: Mapped<CSSParsed>;
-	selector: string;
-	rules: CSSParsedProp[];
+	className: string;
+	children: Mapped<CSSParsedObj>;
+	rules: CSSParsedRule[];
 }
 
-const propCache = createCache<CSSParsedProp>();
-const objCache = createCache<CSSParsed>();
+interface Acc {
+	checksum: number;
+}
 
-const getOrSetProp = (propName: string, value: PropValue) => {
-	const key = `${propName}_${value}`;
+const ruleCache = createCache<CSSParsedRule>();
+const objCache = createCache<CSSParsedObj>();
 
-	let prop = propCache.get(key);
-	if (!prop) {
-		prop = {
+const getOrSetRule = (name: string, value: RuleValue) => {
+	const key = `${name}_${value}`;
+
+	let rule = ruleCache.get(key);
+	if (!rule) {
+		rule = {
 			hash: hashString(key),
-			str: `${kebabCase(propName)}:${value};`,
-			propName,
+			str: `${kebabCase(name)}:${value};`,
+			name,
 			value
 		};
-		propCache.set(key, prop);
+		ruleCache.set(key, rule);
 	}
 
-	return prop;
+	return rule;
 };
 
-const resolveShorthand = (propName: string, value: PropValue) => {
-	const sh = shorthands[propName];
+const resolveShorthand = (name: string, value: RuleValue) => {
+	const sh = shorthands[name];
 
 	return {
-		propNames: sh ? sh.propNames : [propName],
+		ruleNames: sh ? sh.ruleNames : [name],
 		resolvedValue: sh && typeof value !== 'string' ? `${value}${sh.append}` : value
 	};
 };
 
-const recurse = (css: CSSObject, acc?: { checksum: number }, selector?: string) => {
-	const children: Mapped<CSSParsed> = {};
-	const rules: CSSParsedProp[] = [];
+const recurse = (css: CSSObject, acc?: Acc, selector?: string) => {
+	const children: Mapped<CSSParsedObj> = {};
+	const rules: CSSParsedRule[] = [];
 
 	for (const key in css) {
 		const value = css[key];
@@ -89,12 +91,12 @@ const recurse = (css: CSSObject, acc?: { checksum: number }, selector?: string) 
 				children[key] = recurse(css[key] as CSSObject, acc, `${selector}${key}`);
 				break;
 			default:
-				const { propNames, resolvedValue } = resolveShorthand(key, value as PropValue);
+				const { ruleNames, resolvedValue } = resolveShorthand(key, value as RuleValue);
 
-				for (let i = 0, ii = propNames.length; i < ii; ++i) {
-					const propName = propNames[i];
+				for (let i = 0, ii = ruleNames.length; i < ii; ++i) {
+					const ruleName = ruleNames[i];
 
-					const rule = getOrSetProp(propName, resolvedValue);
+					const rule = getOrSetRule(ruleName, resolvedValue);
 					acc.checksum ^= rule.hash;
 					rules.push(rule);
 				}
@@ -104,9 +106,9 @@ const recurse = (css: CSSObject, acc?: { checksum: number }, selector?: string) 
 	return {
 		checksum: acc.checksum,
 		children,
-		selector,
+		className: selector,
 		rules
-	} as CSSParsed;
+	} as CSSParsedObj;
 };
 
 const getNextClassName = (() => {
@@ -114,20 +116,19 @@ const getNextClassName = (() => {
 	return () => `g-${(++state).toString(32)}`;
 })();
 
-export const createParsed = (css: CSSObject, prevParsed: CSSParsed) => {
+export const createParsed = (css: CSSObject, prevParsed: CSSParsedObj) => {
 	const nextParsed = recurse(
 		css,
 		{
 			checksum: 0
 		},
-		prevParsed ? prevParsed.selector : getNextClassName()
+		prevParsed ? prevParsed.className : getNextClassName()
 	);
 
 	const key = `${nextParsed.checksum}`;
-	let obj = objCache.get(key);
+	let obj = objCache.get(key); // Preserves original selector
 	if (!obj) {
 		obj = nextParsed;
-		console.log({ obj });
 		objCache.set(key, obj);
 	}
 	return obj;
