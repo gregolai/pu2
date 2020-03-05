@@ -1,5 +1,5 @@
 import kebabCase from 'lodash/kebabCase';
-import createCache from './createCache';
+import createCache from '../createCache';
 import shorthands from './shorthands';
 
 // xorshift 32-bit https://en.wikipedia.org/wiki/Xorshift

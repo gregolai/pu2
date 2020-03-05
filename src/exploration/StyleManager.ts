@@ -1,4 +1,3 @@
-import createCache, { Cache } from './createCache';
 import { CSSParsedObj } from './parseCSS';
 
 interface ManagedStyleSheet extends StyleSheet {
@@ -29,10 +28,6 @@ export default class StyleManager {
 	}
 
 	// https://davidwalsh.name/add-rules-stylesheets
-	_addCSSRule = (selector: string, rules: string, index: number) => {
-		this._sheet.insertRule(`${selector}{${rules}}`, index);
-	};
-
 	addOrUpdateObj(obj: CSSParsedObj) {
 		const { checksum, children, className, rules } = obj;
 
@@ -58,16 +53,5 @@ export default class StyleManager {
 		for (const key in children) {
 			this.addOrUpdateObj(children[key]);
 		}
-	}
-
-	addOrUpdateSelector(selector: string, rulesStr: string) {
-		let index = this._selectorToIndex[selector];
-		if (index === undefined) {
-			index = this._nextIndex++;
-			this._selectorToIndex[selector] = index;
-		} else {
-			this._sheet.deleteRule(index);
-		}
-		this._sheet.insertRule(`${selector}{${rulesStr}}`, index);
 	}
 }
