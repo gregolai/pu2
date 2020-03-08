@@ -1,42 +1,39 @@
-import { h, Component, Fragment } from 'preact';
+import React, { Fragment } from 'react';
 import { Greeter } from 'greeter';
 
-import { createParsed } from 'exploration/parseCSS';
-//import { createParsed, updateParsed } from 'exploration/parseCSS_types';
-import StyleManager from 'exploration/StyleManager';
+import StyledPrimitive from 'StyledPrimitive';
 
-const manager = new StyleManager('g');
+// const manager = new SheetManager('g');
 
-class StyledPrimitive extends Component {
-	static defaultProps = {
-		as: 'div'
-	};
-	static getDerivedStateFromProps(nextProps, prevState) {
-		const parsedObj = createParsed(nextProps.css, prevState.parsedObj);
+// class StyledPrimitive extends Component {
+// 	static defaultProps = {
+// 		as: 'div'
+// 	};
+// 	static getDerivedStateFromProps(nextProps, prevState) {
+// 		const parsedObj = createParsed(nextProps.css, prevState.parsedObj);
 
-		manager.addOrUpdateObj(parsedObj);
+// 		manager.addOrUpdateObj(parsedObj);
 
-		return { parsedObj };
-	}
+// 		return { parsedObj };
+// 	}
 
-	state = {
-		parsedObj: null
-	};
+// 	state = {
+// 		parsedObj: null
+// 	};
 
-	render() {
-		// @ts-ignore
-		const { as: Component } = this.props;
-		const { parsedObj } = this.state;
+// 	render() {
+// 		// @ts-ignore
+// 		const { as: Component } = this.props;
+// 		const { parsedObj } = this.state;
 
-		// @ts-ignore
-		return <Component className={parsedObj?.className}>{this.props.children}</Component>;
-	}
-}
+// 		// @ts-ignore
+// 		return <Component className={parsedObj?.className}>{this.props.children}</Component>;
+// 	}
+// }
 
 const MyThing = ({ children, css = {}, toggled }) => {
 	return (
 		<StyledPrimitive
-			// @ts-ignore
 			css={{
 				m: 10,
 				width: '100px',
@@ -60,7 +57,7 @@ const MyThing = ({ children, css = {}, toggled }) => {
 	);
 };
 
-export default class App extends Component {
+export default class App extends React.Component<any, any> {
 	state = {
 		toggled: false,
 		parsedObj: null
@@ -80,7 +77,8 @@ export default class App extends Component {
 						key={i}
 						toggled={toggled}
 						css={{
-							outline: `${Math.round(Math.random() * 10 + 1)}px solid black`
+							outline: '4px solid black'
+							//outline: `${Math.round(Math.random() * 10 + 1)}px solid black`
 						}}
 					>
 						{children}

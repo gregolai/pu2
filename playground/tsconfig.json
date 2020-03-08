@@ -1,9 +1,7 @@
 {
 	"extends": "../tsconfig.json",
 	"compilerOptions": {
-		"baseUrl": "../src",
-		"jsx": "react",
-		"jsxFactory": "h"
+		"baseUrl": "../src"
 	},
 	"include": ["./**/*.ts", "./**/*.tsx"]
 }

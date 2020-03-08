@@ -2,33 +2,24 @@ import kebabCase from 'lodash/kebabCase';
 import createCache from '../createCache';
 import shorthands from './shorthands';
 
-// xorshift 32-bit https://en.wikipedia.org/wiki/Xorshift
-const charHash = (charCode: number) => {
-	charCode ^= charCode << 13;
-	charCode ^= charCode >> 17;
-	charCode ^= charCode << 5;
-
-	return charCode;
-};
-
+// Hash string back-to-front
+// https://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
 const hashString = (str: string) => {
 	let hash = 0;
 	for (let i = str.length - 1; i >= 0; --i) {
-		hash ^= charHash(str.charCodeAt(i));
+		hash = (hash << 5) - hash + str.charCodeAt(i);
+		hash = hash & hash; // Convert to 32bit integer
 	}
-
 	return hash;
 };
 
-interface CSSObject {
+export interface CSSObject {
 	[key: string]: string | number | CSSObject;
 }
 
 interface CSSParsedRule {
 	hash: number;
 	str: string;
-	name: string;
-	value: RuleValue;
 }
 
 type RuleValue = string | number;
@@ -37,26 +28,39 @@ export interface CSSParsedObj {
 	checksum: number;
 	className: string;
 	children: Mapped<CSSParsedObj>;
-	rules: CSSParsedRule[];
+	rulesStr: string;
 }
 
 interface Acc {
 	checksum: number;
 }
 
-const ruleCache = createCache<CSSParsedRule>();
-const objCache = createCache<CSSParsedObj>();
+const ruleCache = createCache<string, CSSParsedRule>();
+const objCache = createCache<string, CSSParsedObj>();
+
+const unsupportedRuleKeys = new Set<string>();
 
 const getOrSetRule = (name: string, value: RuleValue) => {
 	const key = `${name}_${value}`;
 
+	if (unsupportedRuleKeys.has(key)) return null;
+
 	let rule = ruleCache.get(key);
 	if (!rule) {
+		let cssName = kebabCase(name);
+		if (cssName.startsWith('webkit-') || cssName.startsWith('moz-') || cssName.startsWith('ms-')) {
+			cssName = `-${cssName}`;
+		}
+
+		const cssValue = `${value}`;
+		if (!CSS.supports(cssName, cssValue)) {
+			unsupportedRuleKeys.add(key);
+			return null;
+		}
+
 		rule = {
 			hash: hashString(key),
-			str: `${kebabCase(name)}:${value};`,
-			name,
-			value
+			str: `${cssName}:${value};`
 		};
 		ruleCache.set(key, rule);
 	}
@@ -73,9 +77,9 @@ const resolveShorthand = (name: string, value: RuleValue) => {
 	};
 };
 
-const recurse = (css: CSSObject, acc?: Acc, selector?: string) => {
+const recurse = (css: CSSObject, acc?: Acc, selector?: string): CSSParsedObj => {
 	const children: Mapped<CSSParsedObj> = {};
-	const rules: CSSParsedRule[] = [];
+	let rulesStr = '';
 
 	for (const key in css) {
 		const value = css[key];
@@ -96,11 +100,11 @@ const recurse = (css: CSSObject, acc?: Acc, selector?: string) => {
 				const { ruleNames, resolvedValue } = resolveShorthand(key, value as RuleValue);
 
 				for (let i = 0, ii = ruleNames.length; i < ii; ++i) {
-					const ruleName = ruleNames[i];
+					const rule = getOrSetRule(ruleNames[i], resolvedValue);
+					if (!rule) continue;
 
-					const rule = getOrSetRule(ruleName, resolvedValue);
 					acc.checksum ^= rule.hash;
-					rules.push(rule);
+					rulesStr += rule.str;
 				}
 		}
 	}
@@ -109,8 +113,8 @@ const recurse = (css: CSSObject, acc?: Acc, selector?: string) => {
 		checksum: acc.checksum,
 		children,
 		className: selector,
-		rules
-	} as CSSParsedObj;
+		rulesStr
+	};
 };
 
 const getNextClassName = (() => {
@@ -119,7 +123,7 @@ const getNextClassName = (() => {
 	return () => `g-${(++state).toString(32)}`;
 })();
 
-export const createParsed = (css: CSSObject, prevParsed: CSSParsedObj) => {
+export const createParsed = (css: CSSObject, prevParsed?: CSSParsedObj) => {
 	const nextParsed = recurse(
 		css,
 		{
