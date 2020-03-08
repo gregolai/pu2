@@ -134,6 +134,13 @@ export const createParsed = (css: CSSObject, prevParsed?: CSSParsedObj) => {
 		prevParsed ? prevParsed.className : getNextClassName()
 	);
 
+	// TODO: CLEAN ME UP!
+	// Solves issue where props would change, but not generate a new className
+	if (prevParsed && prevParsed.checksum !== nextParsed.checksum) {
+		nextParsed.className = getNextClassName();
+		//return prevParsed;
+	}
+
 	const key = `${nextParsed.checksum}`;
 	let obj = objCache.get(key); // Preserves original selector
 	if (!obj) {
