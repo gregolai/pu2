@@ -86,8 +86,8 @@ const recurse = (css: CSSObject, acc?: Acc, selector?: string): CSSParsedObj => 
 	for (const key in css) {
 		const value = css[key];
 
-		// Null and undefined values should not get parsed
-		if (value === null || value === undefined) continue;
+		// Prevent falsy values from being parsed, but allow 0
+		if (!value && value !== 0) continue;
 
 		switch (key[0]) {
 			case '.': // HAS CLASS
