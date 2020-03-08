@@ -1,6 +1,6 @@
 {
 	"name": "pu2",
-	"version": "0.0.12",
+	"version": "0.0.13",
 	"description": "A library written in TypeScript",
 	"keywords": [],
 	"sideEffects": false,
@@ -31,7 +31,7 @@
 		"release:npm": "npm publish dist",
 		"release:preflight": "npm pack ./dist --dry-run",
 		"release": "standard-version",
-		"size": "node scripts/file-size ./dist/bundles/index.umd.min.js ./dist/bundles/index.esm.min.js",
+		"start": "cd playground && npm start",
 		"style:fix": "npm run format:fix && npm run lint:fix",
 		"style": "npm run format -- --list-different && npm run lint",
 		"test:ci": "npm run test -- --ci",
@@ -62,7 +62,10 @@
 	"peerDependencies": {
 		"tslib": ">=1.10.0"
 	},
-	"dependencies": {},
+	"dependencies": {
+		"react": "^16.13.0",
+		"react-dom": "^16.13.0"
+	},
 	"devDependencies": {
 		"@types/jest": "^25.1.3",
 		"@types/node": "^12.12.27",
@@ -79,7 +82,6 @@
 		"lodash": "^4.17.15",
 		"prettier": "^1.19.1",
 		"pretty-bytes": "^5.3.0",
-		"react": "^16.12.0",
 		"standard-version": "^7.1.0",
 		"ts-jest": "^25.2.0",
 		"tslib": "^1.10.0",
