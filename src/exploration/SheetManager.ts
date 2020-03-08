@@ -37,6 +37,7 @@ export default class SheetManager {
 		if (lastSheet) {
 			// Insert after last managed <style> tag
 			lastSheet.after(el);
+
 			return;
 		}
 

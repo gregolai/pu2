@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
-import SheetManager from './exploration/SheetManager';
-import { createParsed, CSSParsedObj, CSSObject } from './exploration/parseCSS';
 import { cx } from './cx';
+import { createParsed, CSSObject, CSSParsedObj } from './exploration/parseCSS';
+import SheetManager from './exploration/SheetManager';
 
 const manager = new SheetManager('g');
 

@@ -10,6 +10,7 @@ const hashString = (str: string) => {
 		hash = (hash << 5) - hash + str.charCodeAt(i);
 		hash = hash & hash; // Convert to 32bit integer
 	}
+
 	return hash;
 };
 
@@ -55,6 +56,7 @@ const getOrSetRule = (name: string, value: RuleValue) => {
 		const cssValue = `${value}`;
 		if (!CSS.supports(cssName, cssValue)) {
 			unsupportedRuleKeys.add(key);
+
 			return null;
 		}
 

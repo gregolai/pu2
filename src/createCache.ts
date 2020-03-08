@@ -8,8 +8,9 @@ export interface Cache<K, V> {
 export default <K, V>(maxCount: number = Number.MAX_SAFE_INTEGER): Cache<K, V> => {
 	let head: Entry<K>,
 		tail: Entry<K>,
-		count: number = 0,
+		count = 0,
 		lookup = new Map<K, V>();
+
 	return {
 		get: (key: K) => lookup.get(key),
 		set: (key: K, value: V) => {
@@ -22,10 +23,10 @@ export default <K, V>(maxCount: number = Number.MAX_SAFE_INTEGER): Cache<K, V> =
 			} else {
 				const [killKey, next] = tail;
 				lookup.delete(killKey);
-				//delete lookup[killKey];
+				// delete lookup[killKey];
 				tail = next;
 			}
-			//lookup[key] = value;
+			// lookup[key] = value;
 			lookup.set(key, value);
 
 			return value;
