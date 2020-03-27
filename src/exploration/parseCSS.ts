@@ -29,6 +29,7 @@ export interface CSSParsedObj {
 	checksum: number;
 	className: string;
 	children: Mapped<CSSParsedObj>;
+	medias: Mapped<CSSParsedObj>;
 	rulesStr: string;
 }
 
@@ -81,6 +82,7 @@ const resolveShorthand = (name: string, value: RuleValue) => {
 
 const recurse = (css: CSSObject, acc?: Acc, selector?: string): CSSParsedObj => {
 	const children: Mapped<CSSParsedObj> = {};
+	const medias: Mapped<CSSParsedObj> = {};
 	let rulesStr = '';
 
 	for (const key in css) {
@@ -98,6 +100,10 @@ const recurse = (css: CSSObject, acc?: Acc, selector?: string): CSSParsedObj => 
 				acc.checksum ^= hashString(key);
 				children[key] = recurse(css[key] as CSSObject, acc, `${selector}${key}`);
 				break;
+			case '@': // @media
+				acc.checksum ^= hashString(key);
+				medias[key] = recurse(css[key] as CSSObject, acc, selector);
+				break;
 			default:
 				const { ruleNames, resolvedValue } = resolveShorthand(key, value as RuleValue);
 
@@ -114,6 +120,7 @@ const recurse = (css: CSSObject, acc?: Acc, selector?: string): CSSParsedObj => 
 	return {
 		checksum: acc.checksum,
 		children,
+		medias,
 		className: selector,
 		rulesStr
 	};

@@ -1,6 +1,6 @@
 import { CSSParsedObj } from './parseCSS';
 
-interface ManagedStyleSheet extends StyleSheet {
+interface StyleSheetWithInsertRule extends StyleSheet {
 	addRule: (selector: string, rules: string, index: number) => void;
 	insertRule: (selectorWithRules: string, index: number) => void;
 
@@ -9,25 +9,29 @@ interface ManagedStyleSheet extends StyleSheet {
 
 let _nextSheetId = 1;
 
-export default class SheetManager {
+class ManagedSheet {
 	_nextIndex: number;
-	_classPrefix: string;
 	_selectorToIndex: Mapped<number>;
 	_indexToChecksum: Mapped<number>;
 	_element: HTMLStyleElement;
-	_sheet: ManagedStyleSheet;
+	_sheet: StyleSheetWithInsertRule;
 
-	constructor(classPrefix: string) {
+	constructor(media?: string) {
 		this._nextIndex = 0;
-		this._classPrefix = classPrefix;
 		this._selectorToIndex = {};
 		this._indexToChecksum = {};
 
 		this._element = document.createElement('style');
 		this._element.setAttribute('sheet-id', `${_nextSheetId++}`);
+
+		if (media) {
+			const mediaMatch = media.split('@media ')[1];
+			this._element.setAttribute('media', mediaMatch);
+		}
+
 		this._insertStyleElement(this._element);
 
-		this._sheet = this._element.sheet as ManagedStyleSheet;
+		this._sheet = this._element.sheet as StyleSheetWithInsertRule;
 	}
 
 	_insertStyleElement(el) {
@@ -87,6 +91,37 @@ export default class SheetManager {
 
 		for (const key in children) {
 			this.addOrUpdateObj(children[key]);
+		}
+	}
+}
+
+export default class SheetManager {
+	_sheet: ManagedSheet;
+	_mediaSheets: Mapped<ManagedSheet>;
+
+	constructor(classPrefix: string) {
+		this._sheet = new ManagedSheet();
+		this._mediaSheets = {};
+	}
+
+	addOrUpdateObj(obj: CSSParsedObj, mediaKey?: string) {
+		const { medias } = obj;
+
+		let sheet;
+		if (mediaKey) {
+			// E.g. sheet['@media print']
+			sheet = this._mediaSheets[mediaKey];
+			if (!sheet) {
+				sheet = this._mediaSheets[mediaKey] = new ManagedSheet(mediaKey);
+			}
+		} else {
+			sheet = this._sheet;
+		}
+
+		sheet.addOrUpdateObj(obj);
+
+		for (let mkey in medias) {
+			this.addOrUpdateObj(medias[mkey], mkey);
 		}
 	}
 }

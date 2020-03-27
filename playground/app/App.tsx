@@ -49,6 +49,15 @@ const MyThing = ({ children, css = {}, toggled }) => {
 				':focus': {
 					border: '1px solid black'
 				},
+				'@media screen and (max-width: 1000px)': {
+					color: 'white',
+					backgroundColor: 'green',
+
+					':hover': {
+						color: 'black',
+						backgroundColor: 'yellow'
+					}
+				},
 				...css
 			}}
 		>
@@ -72,7 +81,7 @@ export default class App extends React.Component<any, any> {
 				<button style={{ display: 'block' }} onClick={this.toggle}>
 					TOGGLE CSS
 				</button>
-				{Array.from(Array(1000)).map((_, i) => (
+				{Array.from(Array(10)).map((_, i) => (
 					<MyThing
 						key={i}
 						toggled={toggled}
