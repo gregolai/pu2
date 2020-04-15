@@ -6,6 +6,6 @@
 
 ---
 
-Personal common library for [Gregory](https://gregoryland.com)
+[My Lib](https://gregoryland.com)
 
 Based on [typescript-lib-starter](https://github.com/Hotell/typescript-lib-starter)

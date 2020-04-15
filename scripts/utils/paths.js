@@ -7,7 +7,7 @@ const rootPackage = path.resolve(root, 'package.json');
 const tsconfigEsm = path.resolve(root, 'tsconfig.json');
 
 const dist = path.resolve(root, 'dist');
-const distPackage = path.resolve(dist, 'package.json');
+//const distPackage = path.resolve(dist, 'package.json');
 
 const distCjs = path.resolve(dist, 'cjs');
 const distCjsIndex = path.resolve(distCjs, 'index.js');
@@ -30,7 +30,7 @@ module.exports = {
 	tsconfigEsm,
 
 	dist,
-	distPackage,
+	//distPackage,
 	distCjs,
 	distCjsIndex,
 	distEsm,

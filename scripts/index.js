@@ -29,37 +29,6 @@ const cleanDist = async () => {
 	}
 };
 
-const createPackageJSON = async () => {
-	// Omit extraneous keys from package.json
-	const { devDependencies, husky, scripts, ...pkg } = JSON.parse(
-		fs.readFileSync(paths.rootPackage, { encoding: 'utf-8' })
-	);
-	delete pkg['lint-staged'];
-
-	const DIST_MAIN = path.relative(paths.dist, paths.distEsmIndex);
-	const distPackage = {
-		...pkg,
-		main: DIST_MAIN,
-		module: DIST_MAIN
-	};
-
-	const jsonFormat = source => {
-		return prettier.format(JSON.stringify(source), {
-			parser: 'json'
-		});
-	};
-
-	fs.writeFileSync(paths.distPackage, jsonFormat(distPackage), { encoding: 'utf-8' });
-};
-
-const copyMetaFiles = async () => {
-	const copy = filename =>
-		fs.copyFileSync(path.resolve(paths.root, filename), path.resolve(paths.dist, filename));
-
-	copy('README.md');
-	copy('LICENSE');
-};
-
 switch (process.argv[2] || 'help') {
 	case 'help':
 	case 'help:package-scripts':
@@ -92,7 +61,9 @@ switch (process.argv[2] || 'help') {
 		(async () => {
 			await cleanDist();
 			await buildEsm();
-			await Promise.all([createPackageJSON(), copyMetaFiles()]);
+			await Promise.all([
+				/*createPackageJSON(), copyMetaFiles()*/
+			]);
 		})();
 		break;
 
