@@ -1,5 +1,4 @@
-export { Greeter } from './greeter';
 export { startDrag } from './mouse';
-export { cx } from './cx';
-export { createPersist } from './persist';
+export { default as cx } from './cx';
+export { default as createPersist } from './createPersist';
 export { default as StyledPrimitive } from './StyledPrimitive';

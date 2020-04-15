@@ -1,6 +1,6 @@
 type CxClassName = { [key: string]: any } | string | CxClassName[];
 
-export const cx = (...args: CxClassName[]) => {
+const cx = (...args: CxClassName[]) => {
 	const classes: string[] = [];
 
 	for (let i = 0, ii = args.length; i < ii; ++i) {
@@ -21,3 +21,5 @@ export const cx = (...args: CxClassName[]) => {
 
 	return classes.join(' ');
 };
+
+export default cx;

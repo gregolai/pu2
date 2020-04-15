@@ -1,4 +1,4 @@
-import { createPersist } from './persist';
+import createPersist from './createPersist';
 
 describe('persist', () => {
 	it('read and write', () => {

@@ -1,9 +1,9 @@
 import React, { forwardRef, useRef } from 'react';
-import { cx } from './cx';
+import cx from './cx';
 import { createParsed, CSSObject, CSSParsedObj } from './exploration/parseCSS';
 import SheetManager from './exploration/SheetManager';
 
-const manager = new SheetManager('g');
+const manager = new SheetManager();
 
 interface Props {
 	as?: React.FunctionComponent<any> | React.ComponentClass<any> | string;

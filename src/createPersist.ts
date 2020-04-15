@@ -5,7 +5,7 @@ type PersistMap<T> = {
 	};
 };
 
-export const createPersist = <T>(namespace: string, defaultsMap: T) => {
+const createPersist = <T>(namespace: string, defaultsMap: T) => {
 	const ret: Partial<PersistMap<T>> = {};
 
 	for (const key in defaultsMap) {
@@ -32,3 +32,5 @@ export const createPersist = <T>(namespace: string, defaultsMap: T) => {
 
 	return ret as PersistMap<T>;
 };
+
+export default createPersist;

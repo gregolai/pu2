@@ -99,7 +99,7 @@ export default class SheetManager {
 	_sheet: ManagedSheet;
 	_mediaSheets: Mapped<ManagedSheet>;
 
-	constructor(classPrefix: string) {
+	constructor() {
 		this._sheet = new ManagedSheet();
 		this._mediaSheets = {};
 	}
