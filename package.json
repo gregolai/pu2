@@ -1,6 +1,6 @@
 {
 	"name": "pu2",
-	"version": "0.0.23",
+	"version": "0.0.24",
 	"description": "A library written in TypeScript",
 	"keywords": [],
 	"sideEffects": false,
@@ -14,6 +14,13 @@
 		"node": ">=12.10",
 		"npm": ">=6.11"
 	},
+	"files": [
+		"LICENSE",
+		"README.md",
+		"dist/"
+	],
+	"main": "dist/esm/index.js",
+	"module": "dist/esm/index.js",
 	"config": {},
 	"scripts": {
 		"help": "node ./scripts",
@@ -26,8 +33,8 @@
 		"postrelease": "npm run release:github && npm run release:npm",
 		"prerelease": "npm run build",
 		"release:github": "git push --no-verify --follow-tags origin master",
-		"release:npm": "npm publish dist",
-		"release:preflight": "npm pack ./dist --dry-run",
+		"release:npm": "npm publish .",
+		"release:preflight": "npm pack . --dry-run",
 		"release": "standard-version",
 		"start": "cd playground && npm start",
 		"style:fix": "npm run format:fix && npm run lint:fix",
