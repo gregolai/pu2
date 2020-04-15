@@ -1,17 +1,14 @@
 // @ts-check
 const path = require('path');
 
-const root = path.resolve(__dirname, '../..');
+const root = path.resolve(__dirname, '..');
 const rootPackage = path.resolve(root, 'package.json');
 
 const tsconfigEsm = path.resolve(root, 'tsconfig.json');
 
+const coverage = path.resolve(root, 'coverage');
+
 const dist = path.resolve(root, 'dist');
-//const distPackage = path.resolve(dist, 'package.json');
-
-const distCjs = path.resolve(dist, 'cjs');
-const distCjsIndex = path.resolve(distCjs, 'index.js');
-
 const distEsm = path.resolve(dist, 'esm');
 const distEsmIndex = path.resolve(distEsm, 'index.js');
 
@@ -29,10 +26,9 @@ module.exports = {
 
 	tsconfigEsm,
 
+	coverage,
+
 	dist,
-	//distPackage,
-	distCjs,
-	distCjsIndex,
 	distEsm,
 	distEsmIndex,
 

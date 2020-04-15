@@ -9,6 +9,7 @@
 	"rules": {
 		"file-name-casing": false,
 		"forin": false,
+		"max-classes-per-file": false,
 		"no-bitwise": false,
 		"no-console": false,
 		"no-parameter-reassignment": false,

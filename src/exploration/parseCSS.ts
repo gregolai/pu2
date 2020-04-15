@@ -145,7 +145,7 @@ export const createParsed = (css: CSSObject, prevParsed?: CSSParsedObj) => {
 	// Solves issue where props would change, but not generate a new className
 	if (prevParsed && prevParsed.checksum !== nextParsed.checksum) {
 		nextParsed.className = getNextClassName();
-		//return prevParsed;
+		// return prevParsed;
 	}
 
 	const key = `${nextParsed.checksum}`;

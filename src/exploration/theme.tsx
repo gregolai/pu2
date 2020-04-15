@@ -39,7 +39,7 @@ theme={{
 const parseSx = (sx, parsersByName, theme) => {
 	const resolvedCSS = {};
 
-	for (let key in sx) {
+	for (const key in sx) {
 		// e.g. { ruleNames: [], scale: Scales.Spacing }
 		const parser = parsersByName[key];
 		if (parser) {

@@ -9,7 +9,8 @@ const process = require('process');
 
 // const gitConfigParser = require("parse-git-config");
 // const notifier = require("node-notifier");
-const { log, paths } = require('./utils');
+const log = require('./log');
+const paths = require('./paths');
 
 const buildEsm = async () => {
 	log('BUILD:ESM');
@@ -20,7 +21,7 @@ const buildEsm = async () => {
 	}
 };
 
-const cleanDist = async () => {
+const cleanDist = () => {
 	log('CLEAN:DIST');
 	try {
 		execSync(`rm -rf ${paths.dist}`);
@@ -29,49 +30,24 @@ const cleanDist = async () => {
 	}
 };
 
-switch (process.argv[2] || 'help') {
-	case 'help':
-	case 'help:package-scripts':
-		const json = JSON.parse(fs.readFileSync(paths.rootPackage, { encoding: 'utf-8' }));
-		console.log('--- PACKAGE SCRIPTS ---');
-		Object.keys(json.scripts)
-			.sort()
-			.forEach(c => console.log(c));
-		break;
-	// {
-	// 	const content = fs.readFileSync(__filename, {
-	// 		encoding: 'utf-8'
-	// 	});
-	// 	const regexp = /case\s[\'\"]([\w\-\:]+)[\'\"]/g;
+const cleanCoverage = () => {
+	log('CLEAN:COVERAGE');
+	try {
+		execSync(`rm -rf ${paths.coverage}`);
+	} catch (e) {
+		log.error(e.stdout.toString());
+	}
+};
 
-	// 	console.log('--- COMMANDS ---');
-
-	// 	const commands = [];
-	// 	let arr;
-	// 	while ((arr = regexp.exec(content)) !== null) {
-	// 		commands.push(arr[1]);
-	// 	}
-	// 	// SORT ALPHABETICALLY AND LOG
-	// 	commands.sort().forEach(c => console.log(c));
-	// }
-	// break;
-
+switch (process.argv[2]) {
 	case 'build':
-	case 'build:esm':
 		(async () => {
 			await cleanDist();
 			await buildEsm();
-			await Promise.all([
-				/*createPackageJSON(), copyMetaFiles()*/
-			]);
 		})();
 		break;
 
 	case 'clean':
-	case 'clean:dist':
 		cleanDist();
-		break;
-
-	default:
 		break;
 }

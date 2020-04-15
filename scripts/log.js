@@ -42,4 +42,5 @@ log.error = (label, ...args) =>
 		log: console.error,
 		args
 	});
+
 module.exports = log;

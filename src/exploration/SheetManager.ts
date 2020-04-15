@@ -120,7 +120,7 @@ export default class SheetManager {
 
 		sheet.addOrUpdateObj(obj);
 
-		for (let mkey in medias) {
+		for (const mkey in medias) {
 			this.addOrUpdateObj(medias[mkey], mkey);
 		}
 	}
