@@ -156,7 +156,7 @@ function anim_stagger(xs: IAnim[], delta: number): IAnim {
 export const Ease = {
 	linear: ease_linear,
 	cubic: ease_cubic,
-	out_back: ease_out_back,
+	out_back: ease_out_back
 };
 
 export const Animation = {
@@ -167,5 +167,5 @@ export const Animation = {
 	sequence_list: anim_sequence_list,
 	parallel: anim_parallel,
 	parallel_list: anim_parallel_list,
-	stagger: anim_stagger,
+	stagger: anim_stagger
 };

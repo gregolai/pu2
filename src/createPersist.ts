@@ -14,17 +14,10 @@ const createPersist = <T>(namespace: string, defaultsMap: T) => {
 
 		ret[key] = {
 			read: () => {
-				// We want null to be a valid store value, but localStorage.getItem
-				// returns null if the item's not found. To prevent this, we first need
-				// to check if the key exists.
-				if (!localStorage.hasOwnProperty(persistKey)) {
-					return defaultValue;
-				}
-
-				// Parse localStorage item. If null, JSON.parse will return null
-				return JSON.parse(localStorage.getItem(persistKey));
+				const item = localStorage.getItem(persistKey);
+				return item === null ? defaultValue : JSON.parse(item);
 			},
-			write: value => {
+			write: (value) => {
 				localStorage.setItem(persistKey, JSON.stringify(value));
 			}
 		};

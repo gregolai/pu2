@@ -12,7 +12,7 @@ const _label = (label, { bold, underline, italic, strikethrough, color, bgColor 
 		bgColor
 	]
 		.filter(Boolean)
-		.forEach(mod => {
+		.forEach((mod) => {
 			left = mod(left);
 			label = mod(label);
 			right = mod(right);

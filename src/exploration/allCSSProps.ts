@@ -196,7 +196,7 @@ const enum Prop {
 
 	// TODO
 
-	Width,
+	Width
 }
 
 /* SUFFIX */
@@ -450,7 +450,7 @@ const propNameMap: { [key in Prop]: string } = {
 	[Prop.ListStylePosition]: `${LIST_STYLE}${_POSITION}`,
 	[Prop.ListStyleType]: `${LIST_STYLE}-type`,
 
-	[Prop.Width]: `width`,
+	[Prop.Width]: `width`
 };
 
 interface Obj {
@@ -464,7 +464,7 @@ interface Obj {
 const obj: Obj = {
 	[Prop.Background]: 'orange',
 	[Prop.Width]: '10px',
-	fontSize: '20px',
+	fontSize: '20px'
 };
 
 for (var key in obj) {

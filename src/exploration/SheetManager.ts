@@ -34,7 +34,7 @@ class ManagedSheet {
 		this._sheet = this._element.sheet as StyleSheetWithInsertRule;
 	}
 
-	_insertStyleElement(el) {
+	_insertStyleElement(el: HTMLStyleElement) {
 		const head = document.head;
 
 		const lastSheet = head.querySelector('style[sheet-id]:last-child');

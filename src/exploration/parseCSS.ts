@@ -80,7 +80,7 @@ const resolveShorthand = (name: string, value: RuleValue) => {
 	};
 };
 
-const recurse = (css: CSSObject, acc?: Acc, selector?: string): CSSParsedObj => {
+const recurse = (css: CSSObject, acc: Acc, selector: string): CSSParsedObj => {
 	const children: Mapped<CSSParsedObj> = {};
 	const medias: Mapped<CSSParsedObj> = {};
 	let rulesStr = '';

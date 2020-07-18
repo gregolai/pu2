@@ -1,39 +1,9 @@
 import React, { Fragment } from 'react';
-import { Greeter } from 'greeter';
-
-import StyledPrimitive from 'StyledPrimitive';
-
-// const manager = new SheetManager('g');
-
-// class StyledPrimitive extends Component {
-// 	static defaultProps = {
-// 		as: 'div'
-// 	};
-// 	static getDerivedStateFromProps(nextProps, prevState) {
-// 		const parsedObj = createParsed(nextProps.css, prevState.parsedObj);
-
-// 		manager.addOrUpdateObj(parsedObj);
-
-// 		return { parsedObj };
-// 	}
-
-// 	state = {
-// 		parsedObj: null
-// 	};
-
-// 	render() {
-// 		// @ts-ignore
-// 		const { as: Component } = this.props;
-// 		const { parsedObj } = this.state;
-
-// 		// @ts-ignore
-// 		return <Component className={parsedObj?.className}>{this.props.children}</Component>;
-// 	}
-// }
+import Box from 'Box';
 
 const MyThing = ({ children, css = {}, toggled }) => {
 	return (
-		<StyledPrimitive
+		<Box
 			css={{
 				m: 10,
 				width: '100px',
@@ -62,7 +32,7 @@ const MyThing = ({ children, css = {}, toggled }) => {
 			}}
 		>
 			{children}
-		</StyledPrimitive>
+		</Box>
 	);
 };
 

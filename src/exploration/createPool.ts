@@ -17,6 +17,6 @@ export default <T>(initSize: number, createFn: () => T): Pool<T> => {
 				console.assert(_pooled.indexOf(item) === -1, 'Pooled item is already free');
 			}
 			_pooled.push(item);
-		},
+		}
 	};
 };

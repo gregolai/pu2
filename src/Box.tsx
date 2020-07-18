@@ -5,13 +5,13 @@ import SheetManager from './exploration/SheetManager';
 
 const manager = new SheetManager();
 
-interface Props {
-	as?: React.FunctionComponent<any> | React.ComponentClass<any> | string;
+export interface BoxProps {
+	as?: React.ComponentType<any> | string;
 	css: CSSObject;
 	[key: string]: any;
 }
 
-const StyledPrimitive = forwardRef<any, Props>(({ as: Component = 'div', css, ...rest }, ref) => {
+const Box = forwardRef<any, BoxProps>(({ as: Component = 'div', css, ...rest }, ref) => {
 	const prev = useRef<CSSParsedObj>();
 
 	const next = createParsed(css, prev.current);
@@ -27,4 +27,4 @@ const StyledPrimitive = forwardRef<any, Props>(({ as: Component = 'div', css, ..
 	);
 });
 
-export default StyledPrimitive;
+export default Box;

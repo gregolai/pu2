@@ -24,8 +24,8 @@ describe('Mouse', () => {
 	};
 
 	const sendDragStart = (target: HTMLElement, { clientX, clientY, ...rest }) => {
-		return new Promise<MouseEvent>(resolve => {
-			const listener = e => {
+		return new Promise<MouseEvent>((resolve) => {
+			const listener = (e) => {
 				target.removeEventListener('mousedown', listener);
 				resolve(e);
 			};
@@ -52,7 +52,7 @@ describe('Mouse', () => {
 			})
 		);
 	};
-	const sendDragEnd = props => {
+	const sendDragEnd = (props) => {
 		setTimeout(() =>
 			_sendMouseEvent({
 				type: 'mouseup',
@@ -62,7 +62,7 @@ describe('Mouse', () => {
 		);
 	};
 
-	it(`should complete drag lifecycle`, async done => {
+	it(`should complete drag lifecycle`, async (done) => {
 		document.body.innerHTML = `
 			<div id="container">
 				<div id="drag_me" style="width:500px;height:500px"></div>
