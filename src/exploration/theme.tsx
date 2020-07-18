@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { createContext, forwardRef, useRef } from 'react';
 import { Scale } from './parsers';
 
@@ -9,7 +10,7 @@ interface ThemeInterface {
 
 const Context = createContext(null);
 
-const ThemeProvider: React.FC<any> = props => {
+const ThemeProvider: React.FC<any> = (props) => {
 	return <Context.Provider value={{}}>{props.children}</Context.Provider>;
 };
 

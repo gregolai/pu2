@@ -1,4 +1,8 @@
-export default <T>(initSize: number, createFn: () => T) => {
+export interface Pool<T> {
+	alloc(): T;
+	free(item: T): void;
+}
+export default <T>(initSize: number, createFn: () => T): Pool<T> => {
 	const _pooled: T[] = [];
 
 	// Init
@@ -6,17 +10,13 @@ export default <T>(initSize: number, createFn: () => T) => {
 		_pooled.push(createFn());
 	}
 
-	const alloc = () => (_pooled.length === 0 ? createFn() : _pooled.pop());
-
-	const free = (item: T) => {
-		if (__DEV__) {
-			console.assert(_pooled.indexOf(item) === -1);
-		}
-		_pooled.push(item);
-	};
-
 	return {
-		alloc,
-		free
+		alloc: () => (_pooled.length === 0 ? createFn() : (_pooled.pop() as T)),
+		free: (item: T) => {
+			if (__DEV__) {
+				console.assert(_pooled.indexOf(item) === -1, 'Pooled item is already free');
+			}
+			_pooled.push(item);
+		},
 	};
 };

@@ -7,6 +7,7 @@
 		"jsx": "react",
 		"moduleResolution": "node",
 		"outDir": "dist/esm",
+		"strict": true,
 		"target": "ES2019"
 	},
 	"exclude": ["node_modules", "src/**/*.test.ts"],
