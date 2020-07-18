@@ -69,6 +69,9 @@ class ManagedSheet {
 			this._selectorToIndex[selector] = index;
 		} else {
 			if (this._indexToChecksum[index] === checksum) {
+				for (const key in children) {
+					this.addOrUpdateObj(children[key]);
+				}
 				return;
 			}
 
