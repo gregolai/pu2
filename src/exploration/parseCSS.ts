@@ -15,7 +15,7 @@ const hashString = (str: string) => {
 };
 
 export interface CSSObject {
-	[key: string]: string | number | CSSObject;
+	[key: string]: false | string | number | CSSObject;
 }
 
 interface CSSParsedRule {
