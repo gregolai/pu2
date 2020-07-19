@@ -792,7 +792,24 @@ const propNameMap: { [key in Prop]: string } = {
 	[Prop.Zoom]: `zoom`
 };
 
-export interface AllProps {
+type AllShorthandProps = {
+	m: string;
+	ml: string;
+	mr: string;
+	mt: string;
+	mb: string;
+	mx: string;
+	my: string;
+	p: string;
+	pl: string;
+	pr: string;
+	pt: string;
+	pb: string;
+	px: string;
+	py: string;
+};
+
+export type AllProps = {
 	additiveSymbols: string;
 	alignContent: string;
 	alignItems: string;
@@ -1154,7 +1171,9 @@ export interface AllProps {
 	writingMode: string;
 	zIndex: string;
 	zoom: string;
-}
+} & AllShorthandProps;
+
+const shorthands = ['m', 'ml', 'mr', 'mt', 'mb', 'mx', 'my', 'p', 'pl', 'pr', 'pt', 'pb', 'px', 'py'];
 
 const animation = `animation`;
 const background = `background`;
@@ -1553,5 +1572,6 @@ export const allPropsSet = new Set([
 	`wordWrap`,
 	`writingMode`,
 	`zIndex`,
-	`zoom`
+	`zoom`,
+	...shorthands
 ]);
