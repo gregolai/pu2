@@ -6,7 +6,11 @@ import { AllProps, allPropsSet } from './exploration/allCSSProps';
 
 const manager = new SheetManager();
 
-export interface BoxProps extends Partial<AllProps> {
+type PartialAllProps = {
+	[P in keyof AllProps]?: AllProps[P] | false;
+};
+
+export interface BoxProps extends PartialAllProps {
 	as?: React.ComponentType<any> | string;
 	css?: CSSObject;
 	ref?: React.Ref<HTMLElement>;
