@@ -9,7 +9,6 @@ const manager = new SheetManager();
 export interface BoxProps extends Partial<AllProps> {
 	as?: React.ComponentType<any> | string;
 	css?: CSSObject;
-	[key: string]: any;
 }
 
 const Box = forwardRef<any, BoxProps>(({ as: Component = 'div', css = {}, ...rest }, ref) => {
@@ -18,21 +17,34 @@ const Box = forwardRef<any, BoxProps>(({ as: Component = 'div', css = {}, ...res
 	/**
 	 * Apply inline style props to CSS
 	 */
-	css = { ...css };
+	const finalCSS = {};
 	for (const key in rest) {
 		if (allPropsSet.has(key)) {
-			css[key] = rest[key];
+			// @ts-ignore
+			finalCSS[key] = rest[key];
+			// @ts-ignore
+			delete rest[key];
 		}
 	}
 
-	const next = createParsed(css, prev.current);
+	/**
+	 * Apply CSS on top
+	 */
+	Object.assign(finalCSS, css);
+
+	const next = createParsed(finalCSS, prev.current);
 	if (next.checksum !== prev.current?.checksum) {
 		manager.addOrUpdateObj(next);
 		prev.current = next;
 	}
 
 	return (
-		<Component {...rest} className={cx(next.className, rest.className)} ref={ref}>
+		<Component
+			{...rest}
+			// @ts-ignore
+			className={cx(next.className, rest.className)}
+			ref={ref}
+		>
 			{rest.children}
 		</Component>
 	);
