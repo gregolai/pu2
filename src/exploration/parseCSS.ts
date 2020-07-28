@@ -1,5 +1,4 @@
 import kebabCase from 'lodash/kebabCase';
-import createCache from '../createCache';
 import shorthands from './shorthands';
 
 // Hash string back-to-front
@@ -37,8 +36,8 @@ interface Acc {
 	checksum: number;
 }
 
-const ruleCache = createCache<string, CSSParsedRule>();
-const objCache = createCache<string, CSSParsedObj>();
+const ruleCache = new Map<string, CSSParsedRule>();
+const objCache = new Map<string, CSSParsedObj>();
 
 const unsupportedRuleKeys = new Set<string>();
 

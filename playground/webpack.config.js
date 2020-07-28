@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const HtmlPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-const paths = require('../scripts/utils/paths');
+const paths = require('../scripts/paths');
 
 /**
  * @type {webpack.Configuration}

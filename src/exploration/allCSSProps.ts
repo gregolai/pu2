@@ -349,6 +349,7 @@ const enum Prop {
 	TransitionProperty,
 	TransitionTimingFunction,
 	UnicodeBidi,
+	UserSelect,
 	VerticalAlign,
 	Visibility,
 	WhiteSpace,
@@ -778,6 +779,7 @@ const propNameMap: { [key in Prop]: string } = {
 	[Prop.TransitionProperty]: `transition-property`,
 	[Prop.TransitionTimingFunction]: `transition-timing-function`,
 	[Prop.UnicodeBidi]: `unicode-bidi`,
+	[Prop.UserSelect]: `user-select`,
 	[Prop.VerticalAlign]: `vertical-align`,
 	[Prop.Visibility]: `visibility`,
 	[Prop.WhiteSpace]: `white-space`,
@@ -1159,6 +1161,7 @@ export type AllProps = {
 	transitionProperty: string;
 	transitionTimingFunction: string;
 	unicodeBidi: string;
+	userSelect: string;
 	verticalAlign: string;
 	visibility: string;
 	whiteSpace: string;
@@ -1561,6 +1564,7 @@ export const allPropsSet = new Set([
 	`${transition}Property`,
 	`${transition}TimingFunction`,
 	`unicodeBidi`,
+	`userSelect`,
 	`verticalAlign`,
 	`visibility`,
 	`whiteSpace`,

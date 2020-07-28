@@ -6,6 +6,7 @@
 		"inlineSourceMap": true,
 		"jsx": "react",
 		"moduleResolution": "node",
+		"noImplicitAny": true,
 		"outDir": "dist/esm",
 		"strict": true,
 		"target": "ES2019"

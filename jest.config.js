@@ -16,7 +16,10 @@ module.exports = {
 	},
 	globals: {
 		__DEV__: true,
-		__TEST__: true
+		__TEST__: true,
+		'ts-jest': {
+			tsConfig: 'tsconfig.test.json'
+		}
 	},
 	watchPlugins: ['jest-watch-typeahead/filename', 'jest-watch-typeahead/testname']
 };
