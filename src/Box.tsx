@@ -1,5 +1,5 @@
 import React, { forwardRef, useRef } from 'react';
-import cx from './cx';
+import cx, { CxClassName } from './cx';
 import { createParsed, CSSObject, CSSParsedObj } from './exploration/parseCSS';
 import SheetManager from './exploration/SheetManager';
 import { AllProps, allPropsSet } from './exploration/allCSSProps';
@@ -11,7 +11,8 @@ type PartialProps<T> = {
 };
 
 export type BoxProps = PartialProps<AllProps> & {
-	as?: React.ComponentType<any> | string;
+	as?: AsComponent;
+	className?: CxClassName;
 	css?: CSSObject;
 	ref?: React.Ref<HTMLElement>;
 	[key: string]: any;
@@ -23,6 +24,7 @@ const Box: React.FC<BoxProps> = forwardRef<HTMLElement, BoxProps>(
 
 		/**
 		 * Apply inline style props to CSS
+		 * e.g. <Box backgroundColor="green" color="white">
 		 */
 		const finalCSS = {};
 		for (const key in rest) {
@@ -45,16 +47,7 @@ const Box: React.FC<BoxProps> = forwardRef<HTMLElement, BoxProps>(
 			prev.current = next;
 		}
 
-		return (
-			<Component
-				{...rest}
-				// @ts-ignore
-				className={cx(next.className, rest.className)}
-				ref={ref}
-			>
-				{rest.children}
-			</Component>
-		);
+		return <Component ref={ref} {...rest} className={cx(next.className, rest.className)} />;
 	}
 );
 

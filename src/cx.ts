@@ -1,4 +1,4 @@
-type CxClassName = { [key: string]: any } | string | CxClassName[];
+export type CxClassName = { [key: string]: any } | string | CxClassName[] | undefined;
 
 const cx = (...args: CxClassName[]) => {
 	const classes: string[] = [];

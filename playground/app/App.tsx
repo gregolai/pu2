@@ -121,6 +121,9 @@ export default class App extends React.Component<any, any> {
 							color: 'white'
 						},
 						'@media screen and (max-width: 1000px)': {
+							':hover': {
+								border: '10px solid black'
+							},
 							' .foo  .bar': {
 								color: 'salmon'
 							}
