@@ -1579,3 +1579,12 @@ export const allPropsSet = new Set([
 	`zoom`,
 	...shorthands
 ]);
+
+export const allPseudoSelectorSet = new Set([
+	`active`,
+	`focus`,
+	`focus-visible`,
+	`focus-within`,
+	`hover`,
+	`visited`
+]);

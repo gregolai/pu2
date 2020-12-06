@@ -91,18 +91,52 @@ const recurse = (css: CSSObject, acc: Acc, selector: string): CSSParsedObj => {
 		if (!value && value !== 0) continue;
 
 		switch (key[0]) {
-			case '.': // HAS CLASS
-			case '[': // HAS ATTR
-			case ' ': // CHILD
-			case '>': // IMMEDIATE CHILD
-			case ':': // PSEUDO
+			/**
+			 * self className
+			 * e.g. '<self_selector>.bar'
+			 */
+			case '.':
+
+			/**
+			 * self attribute
+			 * e.g. '<self_selector>[data-foo]'
+			 */
+			case '[': // HAS ATTR - NOT WORKING!
+
+			/**
+			 * self pseudo-selector
+			 * e.g. ':focus'
+			 */
+			case ':':
+
+			/**
+			 * child selector
+			 * e.g. '<self_selector> <child_selector>'
+			 */
+			case ' ':
+
+			/**
+			 * immediate child selector
+			 * e.g. '> <child_selector>'
+			 */
+			case '>':
 				acc.checksum ^= hashString(key);
 				children[key] = recurse(css[key] as CSSObject, acc, `${selector}${key}`);
 				break;
-			case '@': // @media
+
+			/**
+			 * media rules
+			 * e.g. '@media screen and (max-width: 1000px)'
+			 */
+			case '@':
 				acc.checksum ^= hashString(key);
 				medias[key] = recurse(css[key] as CSSObject, acc, selector);
 				break;
+
+			/**
+			 * css value
+			 * e.g. 'backgroundColor: "green"'
+			 */
 			default:
 				const { ruleNames, resolvedValue } = resolveShorthand(key, value as RuleValue);
 

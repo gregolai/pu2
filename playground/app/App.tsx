@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import Box from 'Box';
 
 const MyThing = ({ children, css = {}, toggled }) => {
@@ -47,7 +47,7 @@ export default class App extends React.Component<any, any> {
 		const { toggled } = this.state;
 
 		return (
-			<Fragment>
+			<>
 				<button style={{ display: 'block' }} onClick={this.toggle}>
 					TOGGLE CSS
 				</button>
@@ -74,7 +74,85 @@ export default class App extends React.Component<any, any> {
 						OTHER
 					</MyThing>
 				)}
-			</Fragment>
+
+				<Box
+					backgroundColor="blue"
+					css={{
+						':hover': {
+							backgroundColor: 'orange'
+						}
+					}}
+				>
+					Changes orange when hovering
+				</Box>
+
+				<Box
+					css={{
+						'> div': {
+							backgroundColor: 'green',
+							color: 'white'
+						}
+					}}
+				>
+					<Box margin={'100px'}>
+						Immediate div is green and white
+						<Box backgroundColor="white" color="black">
+							But not this one
+						</Box>
+					</Box>
+				</Box>
+
+				<Box
+					className="baz"
+					css={{
+						'.baz': {
+							backgroundColor: 'orange'
+						},
+						' .x': {
+							backgroundColor: 'purple',
+							color: 'white'
+						},
+						' .foo .bar': {
+							backgroundColor: 'yellow',
+							color: 'blue'
+						},
+						' .foo .baz': {
+							backgroundColor: 'green',
+							color: 'white'
+						},
+						'@media screen and (max-width: 1000px)': {
+							' .foo  .bar': {
+								color: 'salmon'
+							}
+						}
+					}}
+				>
+					<Box className="x">x is purple</Box>
+					<Box className="foo" padding={'100px'}>
+						<Box className="bar">bar is yellow</Box>
+						<Box className="baz">baz is green</Box>
+						<Box className="x">x is purple</Box>
+					</Box>
+				</Box>
+
+				<Box
+					css={{
+						' [data-test="container_a"]': {
+							backgroundColor: 'red'
+						},
+						' [data-test="container_b"]': {
+							backgroundColor: 'blue'
+						},
+						' [data-foo]': {
+							backgroundColor: 'yellow'
+						}
+					}}
+				>
+					<Box data-test="container_a">container a is red</Box>
+					<Box data-test="container_b">container b is blue</Box>
+					<Box data-foo>foo is yellow</Box>
+				</Box>
+			</>
 		);
 	}
 }
