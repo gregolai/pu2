@@ -26,12 +26,10 @@ const Box: React.FC<BoxProps> = forwardRef<HTMLElement, BoxProps>(
 		 * Apply inline style props to CSS
 		 * e.g. <Box backgroundColor="green" color="white">
 		 */
-		const finalCSS = {};
+		const finalCSS: CSSObject = {};
 		for (const key in rest) {
 			if (allPropsSet.has(key)) {
-				// @ts-ignore
 				finalCSS[key] = rest[key];
-				// @ts-ignore
 				delete rest[key];
 			}
 		}
