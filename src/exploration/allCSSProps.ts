@@ -811,6 +811,9 @@ type AllShorthandProps = {
 	py: string;
 };
 
+/**
+ * All CSS props
+ */
 export type AllProps = {
 	additiveSymbols: string;
 	alignContent: string;
