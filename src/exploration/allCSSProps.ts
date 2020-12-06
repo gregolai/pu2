@@ -1037,6 +1037,7 @@ export type AllProps = {
 	maxHeight: string;
 	maxInlineSize: string;
 	maxWidth: string;
+	minHeight: string;
 	minInlineSize: string;
 	minWidth: string;
 	mixBlendMode: string;
