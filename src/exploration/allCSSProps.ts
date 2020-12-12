@@ -1447,6 +1447,7 @@ export const allPropsSet = new Set([
 	`maxInlineSize`,
 	`maxWidth`,
 	`minInlineSize`,
+	`minHeight`,
 	`minWidth`,
 	`mixBlendMode`,
 	`objectFit`,
