@@ -362,7 +362,18 @@ const enum Prop {
 	WordWrap,
 	WritingMode,
 	ZIndex,
-	Zoom
+	Zoom,
+
+	/**
+	 * Webkit
+	 */
+	WebkitFontSmoothing,
+	WebkitMaskImage,
+
+	/**
+	 * Moz OSX
+	 */
+	MozOsxFontSmoothing
 }
 
 /* SUFFIX */
@@ -793,7 +804,18 @@ const propNameMap: { [key in Prop]: string } = {
 	[Prop.WordWrap]: `word-wrap`,
 	[Prop.WritingMode]: `writing-mode`,
 	[Prop.ZIndex]: `z-index`,
-	[Prop.Zoom]: `zoom`
+	[Prop.Zoom]: `zoom`,
+
+	/**
+	 * Webkit
+	 */
+	[Prop.WebkitFontSmoothing]: `-webkit-font-smoothing`,
+	[Prop.WebkitMaskImage]: `-webkit-mask-image`,
+
+	/**
+	 * Moz OSX
+	 */
+	[Prop.MozOsxFontSmoothing]: `-moz-osx-font-smoothing`
 };
 
 type AllShorthandProps = {
@@ -1180,6 +1202,17 @@ export type AllProps = {
 	writingMode: string;
 	zIndex: string;
 	zoom: string;
+
+	/**
+	 * Webkit
+	 */
+	webkitFontSmoothing: string;
+	webkitMaskImage: string;
+
+	/**
+	 * Moz OSX
+	 */
+	mozOsxFontSmoothing: string;
 } & AllShorthandProps;
 
 const shorthands = ['m', 'ml', 'mr', 'mt', 'mb', 'mx', 'my', 'p', 'pl', 'pr', 'pt', 'pb', 'px', 'py'];
@@ -1584,6 +1617,18 @@ export const allPropsSet = new Set([
 	`writingMode`,
 	`zIndex`,
 	`zoom`,
+
+	/**
+	 * Webkit
+	 */
+	`webkitFontSmoothing`,
+	`webkitMaskImage`,
+
+	/**
+	 * Moz OSX
+	 */
+	`mozOsxFontSmoothing`,
+
 	...shorthands
 ]);
 
