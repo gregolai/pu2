@@ -162,7 +162,12 @@ const recurse = (css: CSSObject, acc: Acc, selector: string): CSSParsedObj => {
 const getNextClassName = (() => {
 	let state = 0;
 
-	return () => `g-${(++state).toString(32)}`;
+	/**
+	 * THIS CONSTANT IS EQUAL TO "ad", which gets blocked by adblock. Skip it.
+	 */
+	const SKIP_ADBLOCK = 333;
+
+	return () => `g-${(++state === SKIP_ADBLOCK ? ++state : state).toString(32)}`;
 })();
 
 export const createParsed = (css: CSSObject, prevParsed?: CSSParsedObj) => {
