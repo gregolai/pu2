@@ -33,7 +33,6 @@
 		"release:preflight": "npm pack . --dry-run",
 		"release": "standard-version",
 		"start": "cd playground && npm start",
-		"style:fix": "npm run format:fix",
 		"style": "npm run format -- --list-different",
 		"test:ci": "npm run test -- --ci",
 		"test:coverage": "npm run test -- --coverage",
@@ -43,7 +42,7 @@
 	"husky": {
 		"hooks": {
 			"pre-commit": "lint-staged",
-			"pre-push": "npm run style:fix && npm run test -- --bail --onlyChanged"
+			"pre-push": "npm run format && npm run test -- --bail --onlyChanged"
 		}
 	},
 	"lint-staged": {
