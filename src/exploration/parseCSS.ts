@@ -54,7 +54,7 @@ const getOrSetRule = (name: string, value: RuleValue) => {
 		}
 
 		const cssValue = `${value}`;
-		if (!CSS.supports(cssName, cssValue)) {
+		if (typeof CSS === 'object' && !CSS.supports(cssName, cssValue)) {
 			unsupportedRuleKeys.add(key);
 
 			return null;
