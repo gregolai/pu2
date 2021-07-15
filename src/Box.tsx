@@ -1,5 +1,5 @@
 import React, { forwardRef, useRef } from 'react';
-import cx, { CxClassName } from './cx';
+import { cx, CxClassName } from './cx';
 import { createParsed, CSSObject, CSSParsedObj } from './exploration/parseCSS';
 import SheetManager from './exploration/SheetManager';
 import { AllProps, allPropsSet } from './exploration/allCSSProps';
@@ -18,7 +18,7 @@ export type BoxProps = PartialProps<AllProps> & {
 	[key: string]: any;
 };
 
-const Box: React.FC<BoxProps> = forwardRef<HTMLElement, BoxProps>(
+export const Box: React.FC<BoxProps> = forwardRef<HTMLElement, BoxProps>(
 	({ as: Component = 'div', css = {}, ...rest }, ref) => {
 		const prev = useRef<CSSParsedObj>();
 
@@ -48,5 +48,3 @@ const Box: React.FC<BoxProps> = forwardRef<HTMLElement, BoxProps>(
 		return <Component ref={ref} {...rest} className={cx(next.className, rest.className)} />;
 	}
 );
-
-export default Box;

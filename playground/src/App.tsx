@@ -1,4 +1,5 @@
 import React from 'react';
+// import { Box } from 'pu2';
 import Box from 'Box';
 
 const MyThing = ({ children, css = {}, toggled }) => {
@@ -36,7 +37,7 @@ const MyThing = ({ children, css = {}, toggled }) => {
 	);
 };
 
-export default class App extends React.Component<any, any> {
+export class App extends React.Component<any, any> {
 	state = {
 		toggled: false,
 		parsedObj: null

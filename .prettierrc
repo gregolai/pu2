@@ -1,4 +1,5 @@
 {
+	"endOfLine": "crlf",
 	"parser": "typescript",
 	"printWidth": 110,
 	"singleQuote": true,

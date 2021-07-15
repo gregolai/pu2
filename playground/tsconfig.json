@@ -1,9 +1,9 @@
 {
 	"extends": "../tsconfig.json",
 	"compilerOptions": {
-		"baseUrl": "../src",
+		"baseUrl": ".",
 		"noImplicitAny": false,
 		"strict": false
 	},
-	"include": ["app", "../src"]
+	"include": ["./src", "../src"]
 }
