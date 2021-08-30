@@ -1,6 +1,5 @@
 import React from 'react';
-// import { Box } from 'pu2';
-import Box from 'Box';
+import { Box } from '../../dist/esm/Box';
 
 const MyThing = ({ children, css = {}, toggled }) => {
 	return (

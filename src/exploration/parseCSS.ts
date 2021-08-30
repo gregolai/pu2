@@ -1,5 +1,16 @@
-import kebabCase from 'lodash/kebabCase';
 import shorthands from './shorthands';
+
+/**
+ * Prevent need to import lodash/kebabCase
+ * https://gist.github.com/thevangelist/8ff91bac947018c9f3bfaad6487fa149#gistcomment-2870157
+ */
+const toKebabCase = (str: string) =>
+	str &&
+	// @ts-ignore
+	str
+		.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
+		.map((x) => x.toLowerCase())
+		.join('-');
 
 // Hash string back-to-front
 // https://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
@@ -48,7 +59,7 @@ const getOrSetRule = (name: string, value: RuleValue) => {
 
 	let rule = ruleCache.get(key);
 	if (!rule) {
-		let cssName = kebabCase(name);
+		let cssName = toKebabCase(name);
 		if (cssName.startsWith('webkit-') || cssName.startsWith('moz-') || cssName.startsWith('ms-')) {
 			cssName = `-${cssName}`;
 		}

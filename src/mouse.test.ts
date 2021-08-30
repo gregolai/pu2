@@ -62,7 +62,7 @@ describe('Mouse', () => {
 		);
 	};
 
-	it(`should complete drag lifecycle`, async (done) => {
+	it(`should complete drag lifecycle`, (done) => {
 		document.body.innerHTML = `
 			<div id="container">
 				<div id="drag_me" style="width:500px;height:500px"></div>
@@ -80,40 +80,40 @@ describe('Mouse', () => {
 			});
 		};
 
-		const elem = document.getElementById('drag_me');
+		sendDragStart(document.getElementById('drag_me'), { clientX: 50, clientY: 50 }).then(
+			(mouseDownEvent) => {
+				startDrag(mouseDownEvent, {
+					onDragStart: ({ hoverTarget, ...args }) => {
+						expectDragArgs(args, {
+							clientX: 50,
+							clientY: 50,
+							deltaX: 0,
+							deltaY: 0
+						});
+						sendDrag({ clientX: 100, clientY: 100 });
+					},
 
-		const mouseDownEvent = await sendDragStart(elem, { clientX: 50, clientY: 50 });
+					onDrag: ({ hoverTarget, ...args }) => {
+						expectDragArgs(args, {
+							clientX: 100,
+							clientY: 100,
+							deltaX: 50,
+							deltaY: 50
+						});
+						sendDragEnd({ clientX: 100, clientY: 100 });
+					},
 
-		startDrag(mouseDownEvent, {
-			onDragStart: ({ hoverTarget, ...args }) => {
-				expectDragArgs(args, {
-					clientX: 50,
-					clientY: 50,
-					deltaX: 0,
-					deltaY: 0
+					onDragEnd: ({ hoverTarget, ...args }) => {
+						expectDragArgs(args, {
+							clientX: 100,
+							clientY: 100,
+							deltaX: 50,
+							deltaY: 50
+						});
+						done();
+					}
 				});
-				sendDrag({ clientX: 100, clientY: 100 });
-			},
-
-			onDrag: ({ hoverTarget, ...args }) => {
-				expectDragArgs(args, {
-					clientX: 100,
-					clientY: 100,
-					deltaX: 50,
-					deltaY: 50
-				});
-				sendDragEnd({ clientX: 100, clientY: 100 });
-			},
-
-			onDragEnd: ({ hoverTarget, ...args }) => {
-				expectDragArgs(args, {
-					clientX: 100,
-					clientY: 100,
-					deltaX: 50,
-					deltaY: 50
-				});
-				done();
 			}
-		});
+		);
 	});
 });

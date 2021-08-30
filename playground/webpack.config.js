@@ -10,7 +10,7 @@ module.exports = {
 	mode: 'development',
 	devtool: 'eval-cheap-module-source-map',
 	node: {
-		fs: 'empty'
+		// fs: 'empty'
 	},
 
 	entry: {

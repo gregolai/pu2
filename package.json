@@ -33,11 +33,10 @@
 		"release:preflight": "npm pack . --dry-run",
 		"release": "standard-version",
 		"start": "cd playground && npm start",
-		"style": "npm run format -- --list-different",
 		"test:ci": "npm run test -- --ci",
 		"test:coverage": "npm run test -- --coverage",
 		"test:watch": "npm run test -- --watch",
-		"test": "jest"
+		"test": "jest --env=jsdom"
 	},
 	"husky": {
 		"hooks": {
@@ -65,19 +64,18 @@
 		"react-dom": ">=17.0"
 	},
 	"devDependencies": {
-		"@types/jest": "^26.0.24",
-		"@types/lodash": "^4.14.171",
+		"@types/jest": "^27.0.1",
 		"@types/node": "^16.3.2",
 		"@types/prettier": "^2.3.2",
-		"@types/react": "^17.0.14",
-		"husky": "^7.0.1",
-		"jest": "^27.0.6",
+		"@types/react": "^17.0.19",
+		"husky": "^7.0.2",
+		"jest": "^27.1.0",
+		"jest-localstorage-mock": "^2.4.17",
 		"jest-watch-typeahead": "^0.6.4",
-		"lint-staged": "^11.0.1",
-		"lodash": "^4.17.21",
+		"lint-staged": "^11.1.2",
 		"prettier": "^2.3.2",
 		"standard-version": "^9.3.1",
-		"ts-jest": "^27.0.3",
-		"typescript": "^4.3.5"
+		"ts-jest": "^27.0.5",
+		"typescript": "^4.4.2"
 	}
 }

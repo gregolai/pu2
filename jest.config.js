@@ -14,6 +14,11 @@ module.exports = {
 			statements: 80
 		}
 	},
+
+	// ALLOWS FOR localStorage
+	resetMocks: false,
+	setupFiles: ['jest-localstorage-mock'],
+
 	globals: {
 		__DEV__: true,
 		__TEST__: true,
