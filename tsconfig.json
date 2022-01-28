@@ -1,12 +1,16 @@
 {
 	"compilerOptions": {
 		"allowJs": true,
+		"alwaysStrict": true,
 		"declaration": true,
 		"esModuleInterop": true,
 		"inlineSourceMap": true,
 		"jsx": "react",
+		"module": "ESNext",
 		"moduleResolution": "node",
 		"noImplicitAny": true,
+		"noImplicitReturns": true,
+    	"noImplicitThis": true,
 		"outDir": "dist/esm",
 		"strict": true,
 		"target": "ES2019"

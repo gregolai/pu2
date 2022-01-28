@@ -1,8 +1,8 @@
-import React, { forwardRef, useRef } from 'react';
+import React, { forwardRef } from 'react';
 import { cx, CxClassName } from './cx';
-import { CSSInput, parseCSS } from './exploration/parseCSS';
-import { applyParsedCSS } from './exploration/applyParsedCSS';
+import { CSSInput } from './exploration/parseCSS';
 import { AllProps, allPropsSet } from './exploration/allCSSProps';
+import { useCSS } from './StyleSSRProvider';
 
 type PartialProps<T> = {
 	[P in keyof T]?: T[P] | false;
@@ -17,15 +17,15 @@ export type BoxProps = PartialProps<AllProps> & {
 };
 
 export const Box: React.FC<BoxProps> = forwardRef<HTMLElement, BoxProps>(
-	({ as: Component = 'div', css, ...rest }, ref) => {
+	({ as: Component = 'div', css: extraCSS, ...rest }, ref) => {
 		/**
 		 * Apply inline style props to CSS
 		 * e.g. <Box backgroundColor="green" color="white">
 		 */
-		const finalCSS: CSSInput = {};
+		const css: CSSInput = {};
 		for (const key in rest) {
 			if (allPropsSet.has(key)) {
-				finalCSS[key] = rest[key];
+				css[key] = rest[key];
 				delete rest[key];
 			}
 		}
@@ -33,12 +33,8 @@ export const Box: React.FC<BoxProps> = forwardRef<HTMLElement, BoxProps>(
 		/**
 		 * Apply CSS on top
 		 */
-		Object.assign(finalCSS, css);
+		Object.assign(css, extraCSS);
 
-		const parsed = parseCSS(finalCSS as any);
-
-		applyParsedCSS(parsed);
-
-		return <Component ref={ref} {...rest} className={cx(parsed.className, rest.className)} />;
+		return <Component ref={ref} {...rest} className={cx(useCSS(css), rest.className)} />;
 	}
 );

@@ -86,3 +86,37 @@ export const applyParsedCSS = (obj: ParsedCSS) => {
 		_seenClassNames.add(obj.className);
 	}
 };
+
+export const createStyles = (objs1: ParsedCSS[]) => {
+	let styleStr = '';
+	let mediaStrs: { [mediaKey: string]: string } = {};
+
+	const n = objs1.length;
+	for (let i = 0; i < n; ++i) {
+		const { className, hash, medias, objs } = objs1[i];
+
+		let n2 = objs.length;
+		for (let j = 0; j < n2; ++j) {
+			const sel = `.${className}${objs[j].sel}`;
+			styleStr += `${sel}{${objs[j].rules.map((rule) => rule.str).join('')}}`;
+		}
+
+		for (const mediaKey in medias) {
+			if (!mediaStrs[mediaKey]) mediaStrs[mediaKey] = '';
+
+			const objs2 = medias[mediaKey];
+			let n3 = objs2.length;
+			for (let j = 0; j < n3; ++j) {
+				const sel = `.${className}${objs2[j].sel}`;
+				mediaStrs[mediaKey] += `${sel}{${objs2[j].rules.map((rule) => rule.str).join('')}}`;
+			}
+		}
+	}
+
+	styleStr = `<style>${styleStr}</style>`;
+	let fullMediaStrs = '';
+	for (const mediaKey in mediaStrs) {
+		fullMediaStrs += `<style media="${mediaKey}">${mediaStrs[mediaKey]}</style>`;
+	}
+	return `${styleStr}${fullMediaStrs}`;
+};

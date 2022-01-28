@@ -1,7 +1,8 @@
 import kebabCase from 'lodash/kebabCase';
-import type { AllProps } from './allCSSProps';
+import type { AllStyleProps } from './AllStyleProps';
+import { shorthands } from './shorthands';
 
-export type CSSInput = Partial<AllProps> & {
+export type CSSInput = Partial<AllStyleProps> & {
 	[key: string]: false | string | CSSInput;
 };
 
@@ -74,33 +75,6 @@ const Rules = (() => {
 	};
 })();
 
-const shorthands: { [k: string]: string[] } = {
-	bg: ['background'],
-	b: ['border'],
-	bt: ['borderTop'],
-	br: ['borderRight'],
-	bb: ['borderBottom'],
-	bl: ['borderLeft'],
-	bx: ['borderLeft', 'borderRight'],
-	by: ['borderTop', 'borderBottom'],
-	h: ['height'],
-	m: ['margin'],
-	mt: ['marginTop'],
-	mr: ['marginRight'],
-	mb: ['marginBottom'],
-	ml: ['marginLeft'],
-	my: ['marginTop', 'marginBottom'],
-	mx: ['marginLeft', 'marginRight'],
-	p: ['padding'],
-	pt: ['paddingTop'],
-	pr: ['paddingRight'],
-	pb: ['paddingBottom'],
-	pl: ['paddingLeft'],
-	py: ['paddingTop', 'paddingBottom'],
-	px: ['paddingLeft', 'paddingRight'],
-	w: ['width']
-};
-
 const objCache = new Map<number, ParsedCSS>();
 
 const recurse = (input: CSSInput, acc: Acc, sel: string, media_key?: string) => {
@@ -166,7 +140,7 @@ const recurse = (input: CSSInput, acc: Acc, sel: string, media_key?: string) => 
 			default:
 				if (typeof value !== 'string') continue;
 
-				const ruleNames = shorthands[key] || [key];
+				const ruleNames = shorthands[key as keyof typeof shorthands] || [key];
 
 				for (let i = 0, ii = ruleNames.length; i < ii; ++i) {
 					const rule = Rules.getOrSet(ruleNames[i], value);
@@ -189,7 +163,7 @@ export const parseCSS = (input: CSSInput) => {
 	if (!obj) {
 		obj = {
 			...acc,
-			className: acc.hash !== 1 ? next_class() : ''
+			className: acc.hash ? next_class() : ''
 		};
 		objCache.set(acc.hash, obj);
 	}
