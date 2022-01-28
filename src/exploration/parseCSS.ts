@@ -1,176 +1,39 @@
-import shorthands from './shorthands';
+import kebabCase from 'lodash/kebabCase';
+import type { AllProps } from './allCSSProps';
 
-/**
- * Prevent need to import lodash/kebabCase
- * https://gist.github.com/thevangelist/8ff91bac947018c9f3bfaad6487fa149#gistcomment-2870157
- */
-const toKebabCase = (str: string) =>
-	str &&
-	// @ts-ignore
-	str
-		.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
-		.map((x) => x.toLowerCase())
-		.join('-');
-
-// Hash string back-to-front
-// https://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
-const hashString = (str: string) => {
-	let hash = 0;
-	for (let i = str.length - 1; i >= 0; --i) {
-		hash = (hash << 5) - hash + str.charCodeAt(i);
-		hash = hash & hash; // Convert to 32bit integer
-	}
-
-	return hash;
+export type CSSInput = Partial<AllProps> & {
+	[key: string]: false | string | CSSInput;
 };
 
-export interface CSSObject {
-	[key: string]: false | string | number | CSSObject;
+interface Acc {
+	hash: number;
+	objs: ParsedObj[];
+	medias: { [k: string]: ParsedObj[] };
 }
 
-interface CSSParsedRule {
+export interface ParsedObj {
+	sel: string;
+	rules: RuleObj[];
+}
+
+export interface ParsedCSS extends Acc {
+	className: string;
+}
+
+interface RuleObj {
 	hash: number;
 	str: string;
 }
 
-type RuleValue = string | number;
-
-export interface CSSParsedObj {
-	checksum: number;
-	className: string;
-	children: Mapped<CSSParsedObj>;
-	medias: Mapped<CSSParsedObj>;
-	rulesStr: string;
-}
-
-interface Acc {
-	checksum: number;
-}
-
-const ruleCache = new Map<string, CSSParsedRule>();
-const objCache = new Map<string, CSSParsedObj>();
-
-const unsupportedRuleKeys = new Set<string>();
-
-const getOrSetRule = (name: string, value: RuleValue) => {
-	const key = `${name}_${value}`;
-
-	if (unsupportedRuleKeys.has(key)) return null;
-
-	let rule = ruleCache.get(key);
-	if (!rule) {
-		let cssName = toKebabCase(name);
-		if (cssName.startsWith('webkit-') || cssName.startsWith('moz-') || cssName.startsWith('ms-')) {
-			cssName = `-${cssName}`;
-		}
-
-		const cssValue = `${value}`;
-		if (typeof CSS === 'object' && !CSS.supports(cssName, cssValue)) {
-			unsupportedRuleKeys.add(key);
-
-			return null;
-		}
-
-		rule = {
-			hash: hashString(key),
-			str: `${cssName}:${value};`
-		};
-		ruleCache.set(key, rule);
-	}
-
-	return rule;
+// Hash string back-to-front
+// https://gist.github.com/hyamamoto/fd435505d29ebfa3d9716fd2be8d42f0
+const hashStr = (s: string) => {
+	let h = 0;
+	for (let i = s.length - 1; i >= 0; --i) h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
+	return h;
 };
 
-const resolveShorthand = (name: string, value: RuleValue) => {
-	const sh = shorthands[name];
-
-	return {
-		ruleNames: sh ? sh.ruleNames : [name],
-		resolvedValue: sh && typeof value !== 'string' ? `${value}${sh.append}` : value
-	};
-};
-
-const recurse = (css: CSSObject, acc: Acc, selector: string): CSSParsedObj => {
-	const children: Mapped<CSSParsedObj> = {};
-	const medias: Mapped<CSSParsedObj> = {};
-	let rulesStr = '';
-
-	for (const key in css) {
-		const value = css[key];
-
-		// Prevent falsy values from being parsed, but allow 0
-		if (!value && value !== 0) continue;
-
-		switch (key[0]) {
-			/**
-			 * self className
-			 * e.g. '<self_selector>.bar'
-			 */
-			case '.':
-
-			/**
-			 * self attribute
-			 * e.g. '<self_selector>[data-foo]'
-			 */
-			case '[': // HAS ATTR - NOT WORKING!
-
-			/**
-			 * self pseudo-selector
-			 * e.g. ':focus'
-			 */
-			case ':':
-
-			/**
-			 * child selector
-			 * e.g. '<self_selector> <child_selector>'
-			 */
-			case ' ':
-
-			/**
-			 * immediate child selector
-			 * e.g. '> <child_selector>'
-			 */
-			case '>':
-				acc.checksum ^= hashString(key);
-				children[key] = recurse(css[key] as CSSObject, acc, `${selector}${key}`);
-				break;
-
-			/**
-			 * media rules
-			 * e.g. '@media screen and (max-width: 1000px)'
-			 */
-			case '@':
-				acc.checksum ^= hashString(key);
-				medias[key] = recurse(css[key] as CSSObject, acc, selector);
-				break;
-
-			/**
-			 * css value
-			 * e.g. 'backgroundColor: "green"'
-			 */
-			default:
-				const { ruleNames, resolvedValue } = resolveShorthand(key, value as RuleValue);
-
-				for (let i = 0, ii = ruleNames.length; i < ii; ++i) {
-					const rule = getOrSetRule(ruleNames[i], resolvedValue);
-					if (!rule) continue;
-
-					acc.checksum ^= rule.hash;
-					rulesStr += rule.str;
-				}
-		}
-	}
-
-	return {
-		checksum: acc.checksum,
-		children,
-		medias,
-		className: selector,
-		rulesStr
-	};
-};
-
-const getNextClassName = (() => {
+const next_class = (() => {
 	let state = 0;
 
 	/**
@@ -178,31 +41,157 @@ const getNextClassName = (() => {
 	 */
 	const SKIP_ADBLOCK = 333;
 
-	return () => `g-${(++state === SKIP_ADBLOCK ? ++state : state).toString(32)}`;
+	return () => `a-${++state === SKIP_ADBLOCK ? ++state : state}`;
 })();
 
-export const createParsed = (css: CSSObject, prevParsed?: CSSParsedObj) => {
-	const nextParsed = recurse(
-		css,
-		{
-			checksum: 0
-		},
-		prevParsed ? prevParsed.className : getNextClassName()
-	);
+const Rules = (() => {
+	const ruleCache = new Map<string, RuleObj>();
+	return {
+		getOrSet: (name: string, value: string) => {
+			const kv = `${name}|${value}`;
 
-	// TODO: CLEAN ME UP!
-	// Solves issue where props would change, but not generate a new className
-	if (prevParsed && prevParsed.checksum !== nextParsed.checksum) {
-		nextParsed.className = getNextClassName();
-		// return prevParsed;
+			let rule = ruleCache.get(kv);
+			if (!rule) {
+				let kebabName = kebabCase(name);
+				if (
+					kebabName.startsWith('webkit-') ||
+					kebabName.startsWith('moz-') ||
+					kebabName.startsWith('ms-')
+				) {
+					kebabName = `-${kebabName}`;
+				}
+				if (__DEV__ && typeof CSS === 'object') {
+					console.assert(CSS.supports(kebabName, value));
+				}
+				rule = {
+					hash: hashStr(kv),
+					str: `${kebabName}:${value};`
+				};
+				ruleCache.set(kv, rule);
+			}
+			return rule;
+		}
+	};
+})();
+
+const shorthands: { [k: string]: string[] } = {
+	bg: ['background'],
+	b: ['border'],
+	bt: ['borderTop'],
+	br: ['borderRight'],
+	bb: ['borderBottom'],
+	bl: ['borderLeft'],
+	bx: ['borderLeft', 'borderRight'],
+	by: ['borderTop', 'borderBottom'],
+	h: ['height'],
+	m: ['margin'],
+	mt: ['marginTop'],
+	mr: ['marginRight'],
+	mb: ['marginBottom'],
+	ml: ['marginLeft'],
+	my: ['marginTop', 'marginBottom'],
+	mx: ['marginLeft', 'marginRight'],
+	p: ['padding'],
+	pt: ['paddingTop'],
+	pr: ['paddingRight'],
+	pb: ['paddingBottom'],
+	pl: ['paddingLeft'],
+	py: ['paddingTop', 'paddingBottom'],
+	px: ['paddingLeft', 'paddingRight'],
+	w: ['width']
+};
+
+const objCache = new Map<number, ParsedCSS>();
+
+const recurse = (input: CSSInput, acc: Acc, sel: string, media_key?: string) => {
+	const obj: ParsedObj = {
+		rules: [],
+		sel
+	};
+
+	let sel_hash = hashStr(sel) + 1;
+	if (media_key) {
+		if (!acc.medias[media_key]) acc.medias[media_key] = [];
+		acc.medias[media_key].push(obj);
+		sel_hash ^= hashStr(media_key);
+	} else {
+		acc.objs.push(obj);
 	}
 
-	const key = `${nextParsed.checksum}`;
-	let obj = objCache.get(key); // Preserves original selector
+	for (const key in input) {
+		const value = input[key];
+
+		/**
+		 * Guard against falsy values, empty strings, etc.
+		 */
+		if (!value) continue;
+
+		switch (key[0]) {
+			/**
+			 * self className
+			 * e.g. self_sel.bar
+			 */
+			case '.':
+			/**
+			 * self attribute
+			 * e.g. self_sel[data-bar="foo"]
+			 */
+			case '[':
+			/**
+			 * self pseudo-selector
+			 * e.g. self_sel:focus
+			 */
+			case ':':
+			/**
+			 * child selector
+			 * e.g. self_sel .bar
+			 */
+			case ' ':
+			/**
+			 * immediate child selector
+			 * e.g. self_sel > .bar
+			 */
+			case '>':
+				if (typeof value !== 'object') continue;
+				recurse(value, acc, `${sel}${key}`, media_key);
+				break;
+			/**
+			 * media rules
+			 * e.g. '@media screen and (max-width: 1000px)'
+			 */
+			case '@':
+				if (typeof value !== 'object') continue;
+				recurse(value, acc, sel, key.substring(7));
+				break;
+			default:
+				if (typeof value !== 'string') continue;
+
+				const ruleNames = shorthands[key] || [key];
+
+				for (let i = 0, ii = ruleNames.length; i < ii; ++i) {
+					const rule = Rules.getOrSet(ruleNames[i], value);
+					acc.hash += Math.imul(sel_hash, rule.hash);
+					obj.rules.push(rule);
+				}
+		}
+	}
+};
+
+export const parseCSS = (input: CSSInput) => {
+	const acc: Acc = {
+		hash: 0,
+		medias: {},
+		objs: []
+	};
+	recurse(input, acc, '');
+
+	let obj = objCache.get(acc.hash);
 	if (!obj) {
-		obj = nextParsed;
-		objCache.set(key, obj);
+		obj = {
+			...acc,
+			className: acc.hash !== 1 ? next_class() : ''
+		};
+		objCache.set(acc.hash, obj);
 	}
-
 	return obj;
 };

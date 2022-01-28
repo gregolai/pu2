@@ -5,14 +5,14 @@ const MyThing = ({ children, css = {}, toggled }) => {
 	return (
 		<Box
 			css={{
-				m: 10,
+				m: '10px',
 				width: '100px',
 				display: 'inline-block',
-				fontWeight: toggled ? 'bold' : undefined,
+				fontWeight: toggled && 'bold',
 				color: toggled ? 'salmon' : 'blue',
 				backgroundColor: toggled ? 'blue' : 'red',
 				':hover': {
-					cursor: toggled ? 'pointer' : undefined,
+					cursor: toggled && 'pointer',
 					color: toggled ? 'white' : 'yellow',
 					backgroundColor: toggled ? 'purple' : 'green'
 				},
@@ -140,13 +140,13 @@ export class App extends React.Component<any, any> {
 
 				<Box
 					css={{
-						' [data-test="container_a"]': {
+						'[data-test="container_a"]': {
 							backgroundColor: 'red'
 						},
-						' [data-test="container_b"]': {
+						'[data-test="container_b"]': {
 							backgroundColor: 'blue'
 						},
-						' [data-foo]': {
+						'[data-foo]': {
 							backgroundColor: 'yellow'
 						}
 					}}

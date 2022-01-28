@@ -1,56 +1,63 @@
-import { createParsed } from './parseCSS';
+import { equal, strictEqual } from 'assert';
+import { parseCSS } from './parseCSS';
 
-describe('Styled_tmp', () => {
-	it('stuff', () => {
-		let parsed = createParsed(
-			{
-				fontSize: 16,
-				':hover': {
-					fontSize: 32
-				}
-			},
-			undefined
-		);
+const getHash = (o) => parseCSS(o).hash;
 
-		expect(parsed.rulesStr).toEqual('font-size:16;');
-		expect(parsed.children[':hover'].rulesStr).toEqual('font-size:32;');
+const hashEq = (o1, o2) => expect(parseCSS(o1).hash).toStrictEqual(parseCSS(o2).hash);
+const hashNotEq = (o1, o2) => expect(parseCSS(o1).hash).not.toStrictEqual(parseCSS(o2).hash);
 
-		parsed = createParsed(
-			{
-				// Update thing and add thing
-				fontSize: 8,
-				color: 'white',
+describe('new parse css', () => {
+	it('prevents checksum conflicts', () => {
+		const SELF_CLASS_KEYS = ['.x', '.y'];
+		const SELF_ATTR_KEYS = ['[data-field]', '[name="foo"]'];
+		const SELF_PSEUDO_KEYS = [':focus', ':hover'];
+		const CHILD_KEYS = [' div', ' .a'];
+		const IMM_CHILD_KEYS = ['>div', '>.a'];
+		const MEDIA_KEYS = ['@media screen', '@media screen and (max-width: 1000px)'];
 
-				':hover': {
-					// Remove thing and add thing
-					color: 'blue'
-				}
-			},
-			parsed
-		);
+		let css1 = {
+			color: 'blue',
+			lineHeight: '20px'
+		};
 
-		expect(parsed.rulesStr).toEqual('font-size:8;color:white;');
-		expect(parsed.children[':hover'].rulesStr).toEqual('color:blue;');
+		let css2 = {
+			background: 'orange',
+			fontSize: '8px'
+		};
 
-		parsed = createParsed(
-			{
-				// Remove font size. Update color
-				color: 'blue',
+		let css3 = {
+			m: '20px'
+		};
 
-				// Add h1 sub-selector
-				' h1': {
-					color: 'salmon'
-				}
-				// Remove :hover and everything in it
-			},
-			parsed
-		);
+		[SELF_CLASS_KEYS, SELF_ATTR_KEYS, SELF_PSEUDO_KEYS, CHILD_KEYS, IMM_CHILD_KEYS, MEDIA_KEYS].forEach(
+			([key0, key1]) => {
+				hashEq(
+					{
+						...css1,
+						[key0]: css2,
+						...css3
+					},
+					{
+						...css3,
+						...css1,
+						[key0]: css2
+					}
+				);
 
-		expect(parsed.rulesStr).toEqual('color:blue;');
-		expect(parsed.children[' h1'].rulesStr).toEqual('color:salmon;');
-
-		expect(createParsed({ fontSize: 8, color: 'red' }).checksum).toEqual(
-			createParsed({ color: 'red', fontSize: 8 }).checksum
+				hashNotEq(
+					{
+						...css1,
+						[key0]: css1,
+						[key1]: css2
+					},
+					{
+						...css1,
+						[key0]: css2,
+						[key1]: css1
+					}
+				);
+			}
 		);
 	});
+	it('stuff', () => {});
 });
