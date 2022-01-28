@@ -1,6 +1,6 @@
 {
 	"name": "pu2",
-	"version": "0.0.51",
+	"version": "0.0.52",
 	"description": "A library written in TypeScript",
 	"keywords": [],
 	"sideEffects": false,
