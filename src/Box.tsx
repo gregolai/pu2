@@ -1,14 +1,14 @@
 import React, { forwardRef } from 'react';
 import { cx, CxClassName } from './cx';
-import { CSSInput } from './exploration/parseCSS';
-import { AllProps, allPropsSet } from './exploration/allCSSProps';
-import { useCSS } from './StyleSSRProvider';
+import { AllStyleProps, allPropsSet } from './style-lib/AllStyleProps';
+import { CSSInput } from './style-lib/parser';
+import { useCSS } from './style-lib/useCSS';
 
 type PartialProps<T> = {
 	[P in keyof T]?: T[P] | false;
 };
 
-export type BoxProps = PartialProps<AllProps> & {
+export type BoxProps = PartialProps<AllStyleProps> & {
 	as?: AsComponent;
 	className?: CxClassName;
 	css?: CSSInput;

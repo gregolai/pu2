@@ -1,5 +1,5 @@
 import React, { createContext } from 'react';
-import { ParsedCSS } from './parseCSS';
+import { ParsedCSS } from './parser';
 
 interface Props {
 	children: React.ReactNode;

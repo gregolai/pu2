@@ -1,13 +1,14 @@
 import { equal, strictEqual } from 'assert';
-import { parseCSS } from './parseCSS';
-
-const getHash = (o) => parseCSS(o).hash;
-
-const hashEq = (o1, o2) => expect(parseCSS(o1).hash).toStrictEqual(parseCSS(o2).hash);
-const hashNotEq = (o1, o2) => expect(parseCSS(o1).hash).not.toStrictEqual(parseCSS(o2).hash);
+import { createParser } from './parser';
 
 describe('new parse css', () => {
 	it('prevents checksum conflicts', () => {
+		const parser = createParser((i) => `g-${i}`);
+
+		const getHash = (o) => parser.parse(o).hash;
+		const hashEq = (o1, o2) => expect(parser.parse(o1).hash).toStrictEqual(parser.parse(o2).hash);
+		const hashNotEq = (o1, o2) => expect(parser.parse(o1).hash).not.toStrictEqual(parser.parse(o2).hash);
+
 		const SELF_CLASS_KEYS = ['.x', '.y'];
 		const SELF_ATTR_KEYS = ['[data-field]', '[name="foo"]'];
 		const SELF_PSEUDO_KEYS = [':focus', ':hover'];
