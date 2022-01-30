@@ -1,15 +1,24 @@
 {
 	"name": "pu2",
 	"version": "0.0.53",
-	"description": "A library written in TypeScript",
+	"description": "Personal utils",
 	"keywords": [],
 	"sideEffects": false,
+	"exports": {
+		".": {
+			"import": "./dist/esm/index.js",
+			"require": "./dist/cjs/index.js"
+		}
+	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/gregolai/pu2"
 	},
 	"author": "Gregory Dalton <gregolai@gmail.com>",
 	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/gregolai/pu2/issues"
+	},
 	"engines": {
 		"node": ">=12.10",
 		"npm": ">=6.11"
@@ -19,12 +28,13 @@
 		"README.md",
 		"dist/"
 	],
-	"main": "dist/esm/index.js",
+	"main": "dist/cjs/index.js",
 	"module": "dist/esm/index.js",
 	"config": {},
 	"scripts": {
-		"build": "npm run clean && tsc",
-		"clean": "rm -rf dist",
+		"build": "npm run build:esm && npm run build:umd",
+		"build:umd": "rm -rf dist/umd && tsc --outDir dist/umd --module umd",
+		"build:esm": "rm -rf dist/esm && tsc --outDir dist/esm --module esnext",
 		"format": "prettier src/**/* --write",
 		"postrelease": "npm run release:github && npm run release:npm",
 		"prerelease": "npm run build",

@@ -2,10 +2,6 @@
  * @type {Partial<jest.InitialOptions>}
  */
 module.exports = {
-	preset: 'ts-jest',
-	rootDir: '.',
-	testMatch: ['<rootDir>/src/**/*.test.(ts|tsx)'],
-	testPathIgnorePatterns: ['<rootDir>/dist'],
 	coverageThreshold: {
 		global: {
 			branches: 80,
@@ -14,17 +10,18 @@ module.exports = {
 			statements: 80
 		}
 	},
-
-	// ALLOWS FOR localStorage
-	resetMocks: false,
-	setupFiles: ['jest-localstorage-mock'],
-
 	globals: {
 		__DEV__: true,
 		__TEST__: true,
 		'ts-jest': {
-			tsConfig: 'tsconfig.test.json'
+			useESM: true
 		}
 	},
+	preset: 'ts-jest',
+	resetMocks: true,
+	rootDir: '.',
+	setupFiles: ['jest-localstorage-mock'],
+	testMatch: ['<rootDir>/src/**/*.test.(ts|tsx)'],
+	testPathIgnorePatterns: ['node_modules'],
 	watchPlugins: ['jest-watch-typeahead/filename', 'jest-watch-typeahead/testname']
 };
