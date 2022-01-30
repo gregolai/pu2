@@ -4,12 +4,6 @@
 	"description": "Personal utils",
 	"keywords": [],
 	"sideEffects": false,
-	"exports": {
-		".": {
-			"import": "./dist/esm/index.js",
-			"require": "./dist/cjs/index.js"
-		}
-	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/gregolai/pu2"
@@ -24,18 +18,20 @@
 		"npm": ">=6.11"
 	},
 	"files": [
-		"LICENSE",
-		"README.md",
 		"dist/"
 	],
 	"main": "dist/cjs/index.js",
 	"module": "dist/esm/index.js",
-	"config": {},
+	"types": "dist/types/index.d.js",
 	"scripts": {
 		"build": "npm run build:esm && npm run build:cjs && npm run build:umd",
 		"build:cjs": "rm -rf dist/cjs && tsc --outDir dist/cjs --module commonjs",
 		"build:umd": "rm -rf dist/umd && tsc --outDir dist/umd --module umd",
-		"build:esm": "rm -rf dist/esm && tsc --outDir dist/esm --module esnext",
+		"build:esm": "rm -rf dist/esm && tsc --outDir dist/esm --module es2020",
+		"build:publish-cjs": "rm -rf dist/cjs && tsc -p tsconfig.publish.json --module commonjs --outDir dist/cjs",
+		"build:publish-esm": "rm -rf dist/esm && tsc -p tsconfig.publish.json --module es2020 --outDir dist/esm",
+		"build:publish-types": "rm -rf dist/types && tsc -p tsconfig.publish.types.json --outDir dist/types",
+		"build:prod": "npm run build:publish-cjs && npm run build:publish-esm && npm run build:publish-types && node postbuild.cjs",
 		"format": "prettier src/**/* --write",
 		"postrelease": "npm run release:github && npm run release:npm",
 		"prerelease": "npm run build",

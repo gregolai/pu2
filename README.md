@@ -154,10 +154,9 @@ const server = express();
 server.get('/', async (req, res) => {
 
 	const styles = [];
-	const collect = s => { styles.push(s); }
 
 	const appHtml = renderToString(
-		<StyleSSRProvider collect={collect}>
+		<StyleSSRProvider styles={styles}>
 			<App />
 		</StyleSSRProvider>
 	);
