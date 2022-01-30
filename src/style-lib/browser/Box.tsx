@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 import { cx } from '../../cx';
 import { useStyle } from './useStyle';
-import { type StyleProps, isStyleProp } from '../internal/style-props.generated';
+import { StyleProps, isStyleProp } from '../internal/style-props.generated';
 import { CSSInput } from '../internal/parser';
 
 export type BoxProps = Partial<StyleProps> & {

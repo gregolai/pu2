@@ -4,7 +4,7 @@
 		"alwaysStrict": true,
 		"declaration": true,
 		"esModuleInterop": true,
-		// "incremental": true,
+		"incremental": true,
 		"jsx": "react",
 		"lib": ["ESNext", "DOM"],
 		"module": "CommonJS",

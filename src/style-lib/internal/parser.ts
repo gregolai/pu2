@@ -1,5 +1,5 @@
 import kebabCase from 'lodash/kebabCase';
-import { type StyleProps, shorthands } from './style-props.generated';
+import { StyleProps, shorthands } from './style-props.generated';
 
 export type CSSInput = Partial<StyleProps> & {
 	[key: string]: false | string | CSSInput;
