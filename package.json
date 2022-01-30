@@ -32,7 +32,8 @@
 	"module": "dist/esm/index.js",
 	"config": {},
 	"scripts": {
-		"build": "npm run build:esm && npm run build:umd",
+		"build": "npm run build:esm && npm run build:cjs && npm run build:umd",
+		"build:cjs": "rm -rf dist/cjs && tsc --outDir dist/cjs --module commonjs",
 		"build:umd": "rm -rf dist/umd && tsc --outDir dist/umd --module umd",
 		"build:esm": "rm -rf dist/esm && tsc --outDir dist/esm --module esnext",
 		"format": "prettier src/**/* --write",
