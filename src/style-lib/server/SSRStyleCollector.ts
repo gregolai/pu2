@@ -8,17 +8,17 @@ const getStyleStr = (className: string, objs: ParsedCSS['objs']) => {
 };
 
 export class SSRStyleCollector extends Handler {
-	#styles: ParsedCSS[] = [];
+	_styles: ParsedCSS[] = [];
 	add(p: ParsedCSS): void {
-		this.#styles.push(p);
+		this._styles.push(p);
 	}
 	getHtml() {
 		let styleStr = '';
 		let mediaStrs: Mapped<string> = {};
 
-		const n = this.#styles.length;
+		const n = this._styles.length;
 		for (let i = 0; i < n; ++i) {
-			const { className, medias, objs } = this.#styles[i];
+			const { className, medias, objs } = this._styles[i];
 			styleStr += getStyleStr(className, objs);
 
 			for (const mediaQ in medias) {

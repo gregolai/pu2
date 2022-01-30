@@ -1,16 +1,12 @@
 import React, { forwardRef } from 'react';
-import { cx, CxClassName } from '../../cx';
+import { cx } from '../../cx';
 import { useStyle } from './useStyle';
 import { type StyleProps, isStyleProp } from '../internal/style-props.generated';
 import { CSSInput } from '../internal/parser';
 
-type PartialProps<T> = {
-	[P in keyof T]?: T[P] | false;
-};
-
-export type BoxProps = PartialProps<StyleProps> & {
+export type BoxProps = Partial<StyleProps> & {
 	as?: AsComponent;
-	className?: CxClassName;
+	className?: Parameters<typeof cx>[0];
 	css?: CSSInput;
 	ref?: React.Ref<HTMLElement>;
 	[key: string]: any;

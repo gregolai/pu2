@@ -408,8 +408,11 @@ writeFile(
 export const shorthands = ${JSON.stringify(shorthands)};
 
 export type StyleProps = {
-	${styleProps.map((v) => `${v}: string;`).join(' ')}
-} & Record<keyof typeof shorthands, string>;
+	${styleProps.map((v) => `${v}: false | string;`).join(' ')}
+	${Object.keys(shorthands)
+		.map((v) => `${v}: false | string;`)
+		.join(' ')}
+};
 
 const _set = new Set([
 	${styleProps.map((v) => `'${v}',`).join('')}
