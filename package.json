@@ -1,6 +1,6 @@
 {
 	"name": "pu2",
-	"version": "0.0.59",
+	"version": "0.0.61",
 	"description": "Personal utils",
 	"keywords": [],
 	"sideEffects": false,
@@ -24,17 +24,10 @@
 	"module": "dist/esm/index.js",
 	"types": "dist/types/index.d.js",
 	"scripts": {
-		"build": "npm run build:esm && npm run build:cjs && npm run build:umd",
-		"build:cjs": "rm -rf dist/cjs && tsc --outDir dist/cjs --module commonjs",
-		"build:umd": "rm -rf dist/umd && tsc --outDir dist/umd --module umd",
-		"build:esm": "rm -rf dist/esm && tsc --outDir dist/esm --module es2020",
 		"build:publish-cjs": "rm -rf dist/cjs && tsc -p tsconfig.publish.json --module commonjs --outDir dist",
-		"build:publish-esm": "rm -rf dist/esm && tsc -p tsconfig.publish.json --module es2020 --outDir dist/esm",
-		"build:publish-types": "rm -rf dist/types && tsc -p tsconfig.publish.types.json --outDir dist/types",
-		"build:prod": "rm -rf dist && npm run build:publish-cjs && npm run build:publish-esm && npm run build:publish-types && node postbuild.cjs",
+		"build:prod": "rm -rf dist && npm run build:publish-cjs",
 		"format": "prettier src/**/* --write",
-		"postrelease": "node postrelease.cjs && npm run release:github && npm run release:npm",
-		"prerelease": "npm run build:prod",
+		"postrelease": "npm run release:github && npm run release:npm",
 		"release:github": "git push --no-verify --follow-tags origin master",
 		"release:npm": "npm publish ./dist",
 		"release:preflight": "npm pack ./dist --dry-run",
@@ -58,6 +51,15 @@
 		]
 	},
 	"standard-version": {
+		"scripts": {
+			"prerelease": "npm run build:prod",
+			"prebump": "",
+			"postbump": "node postbump.cjs",
+			"precommit": "",
+			"postcommit": "",
+			"pretag": "",
+			"posttag": ""
+		},
 		"skip": {
 			"changelog": true
 		}
