@@ -2,15 +2,40 @@ const path = require('path');
 const fs = require('fs');
 const { execSync } = require('child_process');
 
-const writePackage = (json, outPath) => {
-	fs.writeFileSync(path.resolve(__dirname, outPath), JSON.stringify(json));
+const writePackage = (json, dest) => {
+	fs.writeFileSync(path.resolve(__dirname, dest), JSON.stringify(json));
 };
+
+const copyFile = (src, dest) => {
+	fs.copyFileSync(src, path.resolve(__dirname, dest));
+};
+
+copyFile('LICENSE', 'dist/LICENSE');
+copyFile('README.md', 'dist/README.md');
 
 writePackage(
 	{
 		type: 'module'
 	},
 	'dist/esm/package.json'
+);
+
+const rootPkg = require('./package.json');
+
+writePackage(
+	{
+		...rootPkg,
+		engines: undefined,
+		files: undefined,
+		main: 'cjs/index.js',
+		module: 'esm/index.js',
+		types: 'types/index.d.js',
+		husky: undefined,
+		'lint-staged': undefined,
+		scripts: undefined,
+		'standard-version': undefined
+	},
+	'dist/package.json'
 );
 
 // const commitHash = getCommitHash();

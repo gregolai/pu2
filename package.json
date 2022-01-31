@@ -30,7 +30,7 @@
 		"postrelease": "npm run release:github && npm run release:npm",
 		"release:github": "git push --no-verify --follow-tags origin master",
 		"release:npm": "npm publish ./dist",
-		"release:preflight": "echo \"release preflight\" && npm pack ./dist --dry-run",
+		"release:preflight": "npm pack ./dist --dry-run",
 		"release": "standard-version",
 		"start": "cd playground && npm start",
 		"test:ci": "npm run test -- --ci",

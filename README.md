@@ -133,7 +133,7 @@ ReactDOM.hydrate(
 import React from 'react';
 import express from 'express';
 import { renderToString } from 'react-dom/server';
-import { SSRStyleProvider, SSRStyleCollector } from 'pu2/server';
+import { SSRStyleProvider, SSRStyleCollector } from 'pu2/style-lib/server';
 import { App } from '../client/App';
 
 const renderSSR = ({ appHtml, styleHtml }) => `
