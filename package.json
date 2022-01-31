@@ -1,6 +1,6 @@
 {
 	"name": "pu2",
-	"version": "0.0.62",
+	"version": "0.0.63",
 	"description": "Personal utils",
 	"keywords": [],
 	"sideEffects": false,
@@ -24,13 +24,13 @@
 	"module": "dist/esm/index.js",
 	"types": "dist/types/index.d.js",
 	"scripts": {
-		"build:publish-cjs": "rm -rf dist/cjs && tsc -p tsconfig.publish.json --module commonjs --outDir dist",
-		"build:prod": "rm -rf dist && npm run build:publish-cjs",
+		"build:cjs": "rm -rf dist/cjs && tsc -p tsconfig.publish.json --module commonjs --outDir dist",
+		"build": "rm -rf dist && npm run build:cjs",
 		"format": "prettier src/**/* --write",
 		"postrelease": "npm run release:github && npm run release:npm",
 		"release:github": "git push --no-verify --follow-tags origin master",
 		"release:npm": "npm publish ./dist",
-		"release:preflight": "npm pack ./dist --dry-run",
+		"release:preflight": "echo \"release preflight\" && npm pack ./dist --dry-run",
 		"release": "standard-version",
 		"start": "cd playground && npm start",
 		"test:ci": "npm run test -- --ci",
@@ -52,7 +52,7 @@
 	},
 	"standard-version": {
 		"scripts": {
-			"prerelease": "npm run build:prod",
+			"prerelease": "npm run build",
 			"prebump": "",
 			"postbump": "node postbump.cjs",
 			"precommit": "",
