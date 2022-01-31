@@ -102,7 +102,7 @@ export const MyButton5 = ({ onClick, prefix }) => (
 ```typescript
 // src/client/App.ts
 import React from 'react';
-import { Box } from 'pu2';
+import { Box } from 'pu2/style-lib';
 
 export const App = () => (
 	<Box background="blue" p="16px">
@@ -114,14 +114,16 @@ export const App = () => (
 ```
 
 ```typescript
-// src/client/main.client.ts
+// src/client/main.client.tsx
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import { BrowserStyleProvider } from 'pu2/style-lib';
 import { App } from './App';
 
 ReactDOM.hydrate(
-	React.createElement(App),
+	<BrowserStyleProvider>
+		<App />
+	</BrowserStyleProvider>,
 	document.body
 )
 ```
@@ -131,9 +133,7 @@ ReactDOM.hydrate(
 import React from 'react';
 import express from 'express';
 import { renderToString } from 'react-dom/server';
-import { getSSRStyleString } from 'pu2/dist/esm/style-lib/style-maker';
-import { StyleSSRProvider } from 'pu2/dist/esm/style-lib/StyleSSRProvider';
-
+import { SSRStyleProvider, SSRStyleCollector } from 'pu2/server';
 import { App } from '../client/App';
 
 const renderSSR = ({ appHtml, styleHtml }) => `
@@ -152,16 +152,13 @@ const renderSSR = ({ appHtml, styleHtml }) => `
 const server = express();
 
 server.get('/', async (req, res) => {
-
-	const styles = [];
-
+	const collector = new SSRStyleCollector();
 	const appHtml = renderToString(
-		<StyleSSRProvider styles={styles}>
+		<SSRStyleProvider collector={collector}>
 			<App />
-		</StyleSSRProvider>
+		</SSRStyleProvider>
 	);
-
-	const styleHtml = getSSRStyleString(styles);
+	const styleHtml = collector.getHtml();
 
 	res.status(200)
 		.set({ 'Content-Type': 'text/html' })

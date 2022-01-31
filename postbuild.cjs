@@ -3,8 +3,7 @@ const fs = require('fs');
 const { execSync } = require('child_process');
 
 const writePackage = (json, outPath) => {
-	const str = JSON.stringify(json);
-	fs.writeFileSync(path.resolve(__dirname, outPath), str);
+	fs.writeFileSync(path.resolve(__dirname, outPath), JSON.stringify(json));
 };
 
 writePackage(
@@ -14,9 +13,7 @@ writePackage(
 	'dist/esm/package.json'
 );
 
-const commitHash = getCommitHash();
-
-console.log(commitHash);
+// const commitHash = getCommitHash();
 
 function getCommitHash() {
 	// const gitHubCommitHash = process.env.GITHUB_SHA && process.env.GITHUB_SHA.split('\n')[0];

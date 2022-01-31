@@ -34,7 +34,7 @@
 		"build:prod": "npm run build:publish-cjs && npm run build:publish-esm && npm run build:publish-types && node postbuild.cjs",
 		"format": "prettier src/**/* --write",
 		"postrelease": "npm run release:github && npm run release:npm",
-		"prerelease": "npm run build",
+		"prerelease": "npm run build:prod",
 		"release:github": "git push --no-verify --follow-tags origin master",
 		"release:npm": "npm publish .",
 		"release:preflight": "npm pack . --dry-run",
