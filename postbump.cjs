@@ -3,7 +3,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const writePackage = (json, dest) => {
-	fs.writeFileSync(path.resolve(__dirname, dest), JSON.stringify(json));
+	fs.writeFileSync(path.resolve(__dirname, dest), JSON.stringify(json, null, 2));
 };
 
 const copyFile = (src, dest) => {
