@@ -17,12 +17,10 @@
 		"node": ">=12.10",
 		"npm": ">=6.11"
 	},
-	"files": [
-		"dist/"
-	],
 	"scripts": {
+		"build:gen:style-props": "node ./src/style-lib/internal/style-props.gen.cjs",
 		"build:cjs": "rm -rf dist/cjs && tsc -p tsconfig.publish.json --module commonjs --outDir dist",
-		"build": "rm -rf dist && npm run build:cjs",
+		"build": "npm run build:gen:style-props && rm -rf dist && npm run build:cjs",
 		"format": "prettier src/**/* --write",
 		"postrelease": "npm run release:github && npm run release:npm",
 		"release:github": "git push --no-verify --follow-tags origin master",
