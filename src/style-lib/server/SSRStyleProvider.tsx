@@ -2,6 +2,9 @@ import React, { useRef } from 'react';
 import { SSRStyleCollector } from './SSRStyleCollector';
 import { InternalStyleProvider } from '../internal/StyleProvider';
 import { createParser } from '../internal/parser';
+import { parse } from 'path/posix';
+
+type ParserType = ReturnType<typeof createParser>;
 
 interface Props {
 	children: React.ReactNode;
@@ -9,7 +12,10 @@ interface Props {
 }
 
 export const SSRStyleProvider = ({ children, collector }: Props) => {
-	const parser = useRef(createParser((i) => `g-${i}`));
+	const parser = useRef<ParserType | null>(null);
+	if (parser.current === null) {
+		parser.current = createParser((i) => `g-${i}`);
+	}
 	return (
 		<InternalStyleProvider handler={collector} parser={parser.current}>
 			{children}
