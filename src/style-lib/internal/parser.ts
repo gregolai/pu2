@@ -2,7 +2,7 @@ import kebabCase from 'lodash/kebabCase';
 import { StyleProps, shorthands } from './style-props.generated';
 
 export type CSSInput = Partial<StyleProps> & {
-	[key: string]: false | string | CSSInput;
+	[key: string]: undefined | null | false | string | CSSInput;
 };
 
 export interface ParsedObj {
