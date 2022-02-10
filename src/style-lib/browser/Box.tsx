@@ -21,7 +21,7 @@ export type BoxProps<T extends React.ElementType> = NativeProps<T> &
  */
 function BoxInner<T extends React.ElementType = 'div'>(
 	{ as, className, css, ...rest }: BoxProps<T>,
-	ref: React.ForwardedRef<any>
+	ref: React.ForwardedRef<unknown>
 ) {
 	/**
 	 * Apply inline style props to CSS
