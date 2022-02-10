@@ -29,8 +29,8 @@ export class SSRStyleCollector extends Handler {
 
 		let mediaStr = '';
 		for (const mediaQ in mediaStrs) {
-			mediaStr += `<style media="${mediaQ}">${mediaStrs[mediaQ]}</style>`;
+			mediaStr += `<style media="${mediaQ}" type="text/css">${mediaStrs[mediaQ]}</style>`;
 		}
-		return `<style>${styleStr}</style>${mediaStr}`;
+		return `<style type="text/css">${styleStr}</style>${mediaStr}`;
 	}
 }
