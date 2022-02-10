@@ -4,6 +4,10 @@ import { useStyle } from './useStyle';
 import { StyleProps, isStyleProp } from '../internal/style-props.generated';
 import { CSSInput } from '../internal/parser';
 
+/**
+ * We have to write it this way to get correct prop inference when using "as".
+ * Don't ask me why.
+ */
 type NativeProps<T extends React.ElementType> = T extends keyof JSX.IntrinsicElements
 	? JSX.IntrinsicElements[T]
 	: React.ComponentPropsWithoutRef<T>;
@@ -13,15 +17,12 @@ export type BoxProps<T extends React.ElementType> = NativeProps<T> &
 		as?: T;
 		className?: Parameters<typeof cx>[0];
 		css?: CSSInput;
+		ref?: React.Ref<any> | React.ForwardedRef<any>;
 	};
 
-/**
- * We have to write it this way to get correct prop inference when using "as".
- * Don't ask me why.
- */
 function BoxInner<T extends React.ElementType = 'div'>(
 	{ as, className, css, ...rest }: BoxProps<T>,
-	ref: React.ForwardedRef<unknown>
+	ref: React.ForwardedRef<any>
 ) {
 	/**
 	 * Apply inline style props to CSS
