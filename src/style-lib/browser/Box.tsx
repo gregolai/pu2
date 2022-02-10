@@ -1,4 +1,4 @@
-import React, { DetailedHTMLFactory, forwardRef, ReactHTML } from 'react';
+import React, { forwardRef } from 'react';
 import { cx } from '../../cx';
 import { useStyle } from './useStyle';
 import { StyleProps, isStyleProp } from '../internal/style-props.generated';
@@ -17,13 +17,10 @@ export type BoxProps<T extends React.ElementType> = NativeProps<T> &
 		as?: T;
 		className?: Parameters<typeof cx>[0];
 		css?: CSSInput;
-		ref?: React.Ref<any> | React.ForwardedRef<any>;
+		ref?: any;
 	};
 
-function BoxInner<T extends React.ElementType = 'div'>(
-	{ as, className, css, ...rest }: BoxProps<T>,
-	ref: React.ForwardedRef<any>
-) {
+function BoxInner<T extends React.ElementType>({ as, className, css, ...rest }: BoxProps<T>, ref: any) {
 	/**
 	 * Apply inline style props to CSS
 	 * e.g. <Box backgroundColor="green" color="white">
