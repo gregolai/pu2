@@ -1,36 +1,54 @@
-import React, { forwardRef } from 'react';
+import React, { DetailedHTMLFactory, forwardRef, ReactHTML } from 'react';
 import { cx } from '../../cx';
 import { useStyle } from './useStyle';
 import { StyleProps, isStyleProp } from '../internal/style-props.generated';
 import { CSSInput } from '../internal/parser';
 
-export type BoxProps = Partial<StyleProps> & {
-	as?: AsComponent;
-	className?: Parameters<typeof cx>[0];
-	css?: CSSInput;
-	ref?: React.Ref<HTMLElement>;
-	[key: string]: any;
-};
+type NativeProps<T extends React.ElementType> = T extends keyof JSX.IntrinsicElements
+	? JSX.IntrinsicElements[T]
+	: React.ComponentPropsWithoutRef<T>;
 
-export const Box: React.FC<BoxProps> = forwardRef<HTMLElement, BoxProps>(
-	({ as: Component = 'div', css: extraCSS, ...rest }, ref) => {
-		/**
-		 * Apply inline style props to CSS
-		 * e.g. <Box backgroundColor="green" color="white">
-		 */
-		const css: CSSInput = {};
-		for (const key in rest) {
-			if (isStyleProp(key)) {
-				css[key] = rest[key];
-				delete rest[key];
-			}
+export type BoxProps<T extends React.ElementType> = NativeProps<T> &
+	Partial<StyleProps> & {
+		as?: T;
+		className?: Parameters<typeof cx>[0];
+		css?: CSSInput;
+	};
+
+/**
+ * We have to write it this way to get correct prop inference when using "as".
+ * Don't ask me why.
+ */
+function BoxInner<T extends React.ElementType = 'div'>(
+	{ as, className, css, ...rest }: BoxProps<T>,
+	ref: React.ForwardedRef<any>
+) {
+	/**
+	 * Apply inline style props to CSS
+	 * e.g. <Box backgroundColor="green" color="white">
+	 */
+	const cssAccum: CSSInput = {};
+	for (const key in rest) {
+		if (isStyleProp(key)) {
+			// @ts-expect-error
+			cssAccum[key] = rest[key];
+			// @ts-expect-error
+			delete rest[key];
 		}
+	}
 
+	if (css) {
 		/**
 		 * Apply CSS on top
 		 */
-		Object.assign(css, extraCSS);
-
-		return <Component ref={ref} {...rest} className={cx(useStyle(css), rest.className)} />;
+		Object.assign(cssAccum, css);
 	}
-);
+
+	return React.createElement(as || 'div', {
+		...rest,
+		ref,
+		className: cx(useStyle(cssAccum), className)
+	});
+}
+
+export const Box = forwardRef(BoxInner) as typeof BoxInner;

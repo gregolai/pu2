@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '../../dist/esm/Box';
+import { Box } from '../../dist/style-lib';
 
 const MyThing = ({ children, css = {}, toggled }) => {
 	return (
