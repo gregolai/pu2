@@ -8,7 +8,6 @@ export type BoxProps = Partial<StyleProps> & {
 	as?: AsComponent;
 	className?: Parameters<typeof cx>[0];
 	css?: CSSInput;
-	ref?: React.Ref<unknown>;
 	[key: string]: any;
 };
 
