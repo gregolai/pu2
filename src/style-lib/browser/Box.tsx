@@ -8,29 +8,27 @@ export type BoxProps = Partial<StyleProps> & {
 	as?: AsComponent;
 	className?: Parameters<typeof cx>[0];
 	css?: CSSInput;
-	ref?: React.Ref<HTMLElement>;
+	ref?: React.Ref<unknown>;
 	[key: string]: any;
 };
 
-export const Box: React.FC<BoxProps> = forwardRef<HTMLElement, BoxProps>(
-	({ as: Component = 'div', css: extraCSS, ...rest }, ref) => {
-		/**
-		 * Apply inline style props to CSS
-		 * e.g. <Box backgroundColor="green" color="white">
-		 */
-		const css: CSSInput = {};
-		for (const key in rest) {
-			if (isStyleProp(key)) {
-				css[key] = rest[key];
-				delete rest[key];
-			}
+export const Box = forwardRef<unknown, BoxProps>(({ as: Component = 'div', css: extraCSS, ...rest }, ref) => {
+	/**
+	 * Apply inline style props to CSS
+	 * e.g. <Box backgroundColor="green" color="white">
+	 */
+	const css: CSSInput = {};
+	for (const key in rest) {
+		if (isStyleProp(key)) {
+			css[key] = rest[key];
+			delete rest[key];
 		}
-
-		/**
-		 * Apply CSS on top
-		 */
-		Object.assign(css, extraCSS);
-
-		return <Component ref={ref} {...rest} className={cx(useStyle(css), rest.className)} />;
 	}
-);
+
+	/**
+	 * Apply CSS on top
+	 */
+	Object.assign(css, extraCSS);
+
+	return <Component ref={ref} {...rest} className={cx(useStyle(css), rest.className)} />;
+});
