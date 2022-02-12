@@ -5,7 +5,7 @@ import { Handler } from './Handler';
 export class BrowserHandler extends Handler {
 	_nextSheetId = 1;
 	_sheet: ManagedSheet | null = null;
-	_mediaSheets: Mapped<ManagedSheet> = {};
+	_mediaSheets: { [mediaQ: string]: ManagedSheet } = {};
 
 	add(p: ParsedCSS) {
 		this._getSheet().add(p.className, p.objs);

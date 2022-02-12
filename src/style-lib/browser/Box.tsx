@@ -5,9 +5,10 @@ import { StyleProps, isStyleProp } from '../internal/style-props.generated';
 import { CSSInput } from '../internal/parser';
 
 export type BoxProps = Partial<StyleProps> & {
-	as?: AsComponent;
+	as?: React.FunctionComponent<any> | React.ComponentClass<any> | keyof JSX.IntrinsicElements;
 	className?: Parameters<typeof cx>[0];
 	css?: CSSInput;
+	ref?: React.Ref<unknown>;
 	[key: string]: any;
 };
 

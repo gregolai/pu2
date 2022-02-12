@@ -14,7 +14,7 @@ export class SSRStyleCollector extends Handler {
 	}
 	getHtml() {
 		let styleStr = '';
-		let mediaStrs: Mapped<string> = {};
+		let mediaStrs: { [mediaQ: string]: string } = {};
 
 		const n = this._styles.length;
 		for (let i = 0; i < n; ++i) {
