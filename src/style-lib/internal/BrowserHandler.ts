@@ -55,13 +55,15 @@ class ManagedSheet {
 
 	_add(className: string, obj: ParsedCSS['objs'][0]) {
 		const str = createRuleStr(className, obj);
-		if (__DEV__) {
-			const delim = ` /**/    /**/ `;
-			const lines = this._el.innerText.split(delim);
-			lines.push(str);
-			this._el.innerText = lines.join(delim);
-		} else {
-			this._sheet.insertRule(str, this._sheet.cssRules.length);
+		if (str) {
+			if (__DEV__) {
+				const delim = ` /**/    /**/ `;
+				const lines = this._el.innerText.split(delim);
+				lines.push(str);
+				this._el.innerText = lines.join(delim);
+			} else {
+				this._sheet.insertRule(str, this._sheet.cssRules.length);
+			}
 		}
 	}
 
