@@ -36,14 +36,13 @@ const MyThing = ({ children, css = {}, toggled }) => {
 	);
 };
 
-export class App extends React.Component<any, any> {
+export class App extends React.Component {
 	state = {
 		toggled: false,
 		parsedObj: null
 	};
 	toggle = () => this.setState({ toggled: !this.state.toggled });
 	render() {
-		const { children } = this.props;
 		const { toggled } = this.state;
 
 		return (
@@ -60,7 +59,7 @@ export class App extends React.Component<any, any> {
 							//outline: `${Math.round(Math.random() * 10 + 1)}px solid black`
 						}}
 					>
-						{children}
+						A button thing
 					</MyThing>
 				))}
 				{toggled && (

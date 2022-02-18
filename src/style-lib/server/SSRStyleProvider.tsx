@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import { SSRStyleCollector } from './SSRStyleCollector';
 import { InternalStyleProvider } from '../internal/StyleProvider';
 import { createParser } from '../internal/parser';
-import { parse } from 'path/posix';
 
 type ParserType = ReturnType<typeof createParser>;
 
