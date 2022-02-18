@@ -11,6 +11,7 @@ export interface ParsedObj {
 }
 
 export interface ParsedCSS {
+	i: number;
 	className: string;
 	hash: number;
 	objs: ParsedObj[];
@@ -152,6 +153,7 @@ export const createParser = (getClassName: (i: number) => string) => {
 	return {
 		parse: (input: CSSInput) => {
 			const acc = recurse(input, getRule, {
+				i: -1,
 				className: '',
 				hash: 0,
 				medias: {},
@@ -160,7 +162,8 @@ export const createParser = (getClassName: (i: number) => string) => {
 			let obj = cache.get(acc.hash);
 			if (!obj) {
 				obj = acc;
-				obj.className = getClassName(nextI());
+				obj.i = nextI();
+				obj.className = getClassName(obj.i);
 				cache.set(obj.hash, obj);
 			}
 			return obj;

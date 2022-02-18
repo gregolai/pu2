@@ -8,6 +8,12 @@ export class BrowserHandler extends Handler {
 	_mediaSheets: { [mediaQ: string]: ManagedSheet } = {};
 
 	add(p: ParsedCSS) {
+		// UNPURE CODE, BUT IT PREVENTS DOUBLE-ADDING CLASSNAMES
+		// TODO: PURIFY!
+		// @ts-ignore
+		if (window['_ssr_i'] && p.i <= window['_ssr_i']) {
+			return;
+		}
 		this._getSheet().add(p.className, p.objs);
 		for (const mediaQ in p.medias) {
 			this._getMediaSheet(mediaQ).add(p.className, p.medias[mediaQ]);
