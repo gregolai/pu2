@@ -73,21 +73,17 @@ class ManagedSheet {
 		}
 	}
 
-	_insertStyleEl(el: HTMLStyleElement, parent = document.head) {
-		const lastManaged = parent.querySelector(`style[sheet-id="${this._sheetId - 1}"]`);
+	_insertStyleEl(el: HTMLStyleElement) {
+		const lastManaged = document.head.querySelector(`style[sheet-id="${this._sheetId - 1}"]`);
 		if (lastManaged) {
 			// Insert after last managed <style[sheet-id]> tag
 			lastManaged.after(el);
 			return;
 		}
-		// Attempt to get first non-managed <style> or <link> tag
-		const firstNonManaged = parent.querySelector('style,link[rel="stylesheet"]');
-		if (firstNonManaged) {
-			// Insert before non-managed <style> or <link> tag
-			parent.insertBefore(el, firstNonManaged);
-		} else {
-			// Edge case - no styles or links found. Just insert it at the end
-			parent.appendChild(el);
-		}
+
+		// This may need more thinking-out, or options, but inserting at the end
+		// seems to make sense for now, as the generated/managed className may need to
+		// override styles from a prior, unmanaged one
+		document.head.appendChild(el);
 	}
 }
