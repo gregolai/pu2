@@ -36,6 +36,6 @@ export const Box: React.FC<BoxProps> = forwardRef<unknown, BoxProps>(
 		 */
 		Object.assign(css, extraCSS);
 
-		return <Component ref={ref} {...rest} className={cx(useStyle(css), rest.className)} />;
+		return <Component ref={ref} {...rest} className={cx(rest.className, useStyle(css))} />;
 	}
 );
